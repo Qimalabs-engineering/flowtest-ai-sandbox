@@ -145,6 +145,8 @@ function Overview() {
         </Card>
       </div>
 
+      <TopFailurePoints />
+
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {opsStats.map((s) => (
           <Card key={s.label}>
