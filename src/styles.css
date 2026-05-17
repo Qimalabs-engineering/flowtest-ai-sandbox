@@ -273,6 +273,31 @@
     color: var(--primary);
     animation: fs-blink 1.05s steps(2, start) infinite;
   }
+
+  /* Flow designer: animated dashed lines for failure transitions */
+  .fs-dash-flow {
+    animation: fs-dash-march 1.2s linear infinite;
+  }
+
+  /* Pulse rings under failure / active state nodes */
+  .fs-pulse-failure {
+    transform-origin: center;
+    animation: fs-pulse-ring 1.8s ease-out infinite;
+  }
+  .fs-pulse-primary {
+    transform-origin: center;
+    animation: fs-pulse-ring 2.2s ease-out infinite;
+  }
+}
+
+@keyframes fs-dash-march {
+  to { stroke-dashoffset: -20; }
+}
+
+@keyframes fs-pulse-ring {
+  0%   { opacity: 0.35; transform: scale(0.98); }
+  50%  { opacity: 0.12; transform: scale(1.02); }
+  100% { opacity: 0.35; transform: scale(0.98); }
 }
 
 @media (prefers-reduced-motion: reduce) {
