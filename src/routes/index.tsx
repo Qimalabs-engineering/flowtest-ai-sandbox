@@ -1,104 +1,122 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
-  Waves,
   Server,
   Workflow,
   Webhook,
   Activity,
-  ShieldAlert,
+  Brain,
   Sparkles,
+  GitBranch,
+  Bell,
   Check,
-  Github,
-  Twitter,
+  AlertTriangle,
+  PlugZap,
+  ListChecks,
+  Eye,
+  GitMerge,
+  TicketCheck,
+  Banknote,
+  TimerReset,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MarketingHeader, MarketingFooter } from "@/components/marketing-shell";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "FlowSim — Test fintech integrations before they break in production" },
-      { name: "description", content: "FlowSim is a programmable sandbox for fintech teams to simulate payment providers, webhooks, failures, retries, and real-world transaction behavior." },
-      { property: "og:title", content: "FlowSim — Fintech integration sandbox" },
-      { property: "og:description", content: "Simulate banks, payment providers, webhooks, and failures before production." },
+      { name: "description", content: "FlowSim helps fintech teams test integrations, simulate failures, and investigate production incidents — before they cost money." },
+      { property: "og:title", content: "FlowSim — Fintech integration sandbox + AI incident copilot" },
+      { property: "og:description", content: "Programmable sandbox, real-world failure simulation, and an AI incident copilot for payments, banking, and webhooks." },
     ],
   }),
   component: Landing,
 });
 
+const problems = [
+  { icon: Server, title: "Fintech sandboxes are too clean", body: "Provider test environments always return 200. Real failures never surface." },
+  { icon: AlertTriangle, title: "Provider failures are hard to reproduce", body: "Timeouts, partial settlements, reversals — they never happen on demand." },
+  { icon: Webhook, title: "Webhooks fail silently", body: "Duplicate, delayed, or reordered deliveries quietly corrupt your ledger." },
+  { icon: GitBranch, title: "Logs, code, Slack, and tickets live apart", body: "Engineers context-switch across five tools just to start an investigation." },
+  { icon: TimerReset, title: "Manual incident response is slow", body: "Hours lost correlating a 500 to the PR that shipped it." },
+];
+
+const solutionPoints = [
+  "Fintech API simulation",
+  "Scenario-based failure testing",
+  "Webhook simulation",
+  "Transaction timelines",
+  "Log and code correlation",
+  "AI root cause analysis",
+  "Slack, Jira, and ClickUp automation",
+];
+
 const features = [
-  { icon: Server, title: "Bank & Payment API Simulation", body: "Mock real provider behavior — Mock Bank NG, M-Pesa, Paystack, Flutterwave and more." },
-  { icon: Workflow, title: "Scenario Engine", body: "Compose programmable scenarios: timeouts, partial failures, account mismatches, reversals." },
-  { icon: Webhook, title: "Webhook Simulator", body: "Duplicate, delay, reorder, and retry webhook events to harden your idempotency layer." },
-  { icon: Activity, title: "Transaction Timeline", body: "Every request, response, and webhook event captured on a single inspectable timeline." },
-  { icon: ShieldAlert, title: "Failure Intelligence", body: "Group failures by root cause across providers and surface anomalies as they happen." },
-  { icon: Sparkles, title: "AI Ops Assistant", body: "Ask why a transaction failed or generate a new scenario from a natural-language brief." },
+  { icon: Server, title: "Bank & Payment API Simulation", body: "Mock Bank NG, M-Pesa, Paystack, Flutterwave, Stripe-style flows." },
+  { icon: Workflow, title: "Scenario Engine", body: "Compose programmable failures: timeouts, partial captures, mismatches." },
+  { icon: Webhook, title: "Webhook Simulator", body: "Duplicate, delay, reorder, and retry events to harden idempotency." },
+  { icon: Activity, title: "Transaction Timeline", body: "Every request, response, and webhook on one inspectable timeline." },
+  { icon: Brain, title: "Ops Brain", body: "Investigation hub linking incidents to logs, code, and Slack threads." },
+  { icon: Sparkles, title: "AI Root Cause Analysis", body: "Ranked hypotheses with evidence pulled from across your stack." },
+  { icon: GitBranch, title: "GitHub + Logs Correlation", body: "Tie failing transactions to risky commits and deploy windows." },
+  { icon: Bell, title: "Slack / Jira / ClickUp Automation", body: "Auto-route alerts and open tickets with full incident context." },
 ];
 
 const steps = [
-  { n: 1, title: "Create a sandbox provider", body: "Pick from prebuilt simulators or define your own provider contract." },
-  { n: 2, title: "Configure failure scenarios", body: "Compose rules: failure rate, delay, webhook behavior, trigger conditions." },
-  { n: 3, title: "Send test transactions", body: "Hit the FlowSim API from your service exactly like production." },
-  { n: 4, title: "Inspect timeline & AI explanation", body: "See what fired, what failed, and why — with an AI summary." },
+  { n: 1, title: "Connect your app or use FlowSim APIs", body: "Drop-in SDK or call FlowSim directly from your services." },
+  { n: 2, title: "Configure providers & scenarios", body: "Pick simulators, set failure rules, define webhook behavior." },
+  { n: 3, title: "Run test transactions & webhook flows", body: "Generate realistic traffic against your integration." },
+  { n: 4, title: "Connect logs & GitHub", body: "Wire Datadog, CloudWatch, Sentry, and GitHub for full context." },
+  { n: 5, title: "Let Ops Brain investigate & suggest fixes", body: "Get ranked hypotheses, evidence, and auto-created tickets." },
+];
+
+const integrations = [
+  { name: "Datadog", body: "Pull APM traces and error logs into incidents." },
+  { name: "CloudWatch", body: "Stream AWS logs alongside transaction events." },
+  { name: "Sentry", body: "Attach matching exceptions to failed transactions." },
+  { name: "GitHub", body: "Surface risky commits within the incident window." },
+  { name: "Slack", body: "Route alerts to the right channel automatically." },
+  { name: "Jira", body: "Open tickets with full evidence pre-attached." },
+  { name: "ClickUp", body: "Auto-create tasks for triage and remediation." },
+];
+
+const useCases = [
+  { icon: Banknote, title: "Test bank transfer integrations" },
+  { icon: Webhook, title: "Simulate webhook failures" },
+  { icon: TimerReset, title: "Reproduce provider timeouts" },
+  { icon: Eye, title: "Investigate failed transactions" },
+  { icon: GitMerge, title: "Link incidents to code changes" },
+  { icon: TicketCheck, title: "Auto-create Jira / ClickUp tickets" },
 ];
 
 const plans = [
-  {
-    name: "Starter", price: "$0", note: "For solo devs",
-    features: ["2 providers", "100k simulated tx / mo", "Basic scenario engine", "Community support"],
-    cta: "Start free",
-  },
-  {
-    name: "Growth", price: "$149", note: "/ month", featured: true,
-    features: ["Unlimited providers", "5M simulated tx / mo", "AI assistant", "Webhook replay & reorder", "Email support"],
-    cta: "Start 14-day trial",
-  },
-  {
-    name: "Enterprise", price: "Custom", note: "SLA & SSO",
-    features: ["Dedicated infra", "Audit logs", "SAML SSO", "Custom providers", "Priority support"],
-    cta: "Talk to sales",
-  },
+  { name: "Developer", price: "$0", note: "Solo & evals", features: ["2 providers", "100k simulated tx / mo", "Basic scenarios", "Community support"], cta: "Start free" },
+  { name: "Team", price: "$249", note: "/ month", featured: true, features: ["Unlimited providers", "5M simulated tx / mo", "Ops Brain + AI RCA", "Slack / Jira / ClickUp", "Email support"], cta: "Start 14-day trial" },
+  { name: "Enterprise", price: "Custom", note: "SLA & SSO", features: ["Dedicated infra", "SAML SSO & audit logs", "Custom providers", "Solutions engineer", "Priority support"], cta: "Talk to sales" },
 ];
 
 function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Waves className="h-4 w-4" />
-            </div>
-            <span className="text-sm font-semibold">FlowSim</span>
-          </Link>
-          <nav className="hidden gap-6 text-sm text-muted-foreground md:flex">
-            <a href="#features" className="hover:text-foreground">Features</a>
-            <a href="#how" className="hover:text-foreground">How it works</a>
-            <a href="#pricing" className="hover:text-foreground">Pricing</a>
-          </nav>
-          <div className="flex items-center gap-2">
-            <Button asChild variant="ghost" size="sm"><Link to="/app">Sign in</Link></Button>
-            <Button asChild size="sm"><Link to="/app">Start free</Link></Button>
-          </div>
-        </div>
-      </header>
+      <MarketingHeader />
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_50%_0%,oklch(0.42_0.18_265/.18),transparent_70%)]" />
         <div className="mx-auto max-w-6xl px-4 py-20 md:py-28 text-center">
-          <Badge variant="secondary" className="mb-5 gap-1.5"><Sparkles className="h-3 w-3" /> Now with AI failure intelligence</Badge>
+          <Badge variant="secondary" className="mb-5 gap-1.5"><Sparkles className="h-3 w-3" /> Now with Ops Brain — AI incident copilot</Badge>
           <h1 className="mx-auto max-w-3xl text-4xl font-semibold tracking-tight md:text-6xl">
             Test fintech integrations <span className="text-primary">before they break</span> in production.
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground md:text-lg">
-            FlowSim gives fintech teams a programmable sandbox to simulate payment providers, webhooks, failures, retries, and real-world transaction behavior.
+            FlowSim gives fintech teams a programmable sandbox, real-world failure simulation, and an AI incident copilot for payments, banking, webhooks, and transaction operations.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
-            <Button asChild size="lg"><Link to="/app">Start Testing <ArrowRight className="ml-1.5 h-4 w-4" /></Link></Button>
-            <Button asChild size="lg" variant="outline"><Link to="/app">View Demo</Link></Button>
+            <Button asChild size="lg"><Link to="/signup">Start Testing <ArrowRight className="ml-1.5 h-4 w-4" /></Link></Button>
+            <Button asChild size="lg" variant="outline"><Link to="/app/overview">View Demo</Link></Button>
           </div>
 
           <div className="mx-auto mt-14 max-w-4xl rounded-xl border bg-card p-2 shadow-2xl shadow-primary/10">
@@ -107,7 +125,7 @@ function Landing() {
               <p>{"  "}-H "Authorization: Bearer fs_sk_sandbox_•••" \</p>
               <p>{"  "}-d '&#123;"provider":"mpesa_sim","amount":2500,"scenario":"timeout_30s"&#125;'</p>
               <p className="mt-2 text-foreground">{"→ 504 Gateway Timeout · scenario matched: Timeout after 30 seconds"}</p>
-              <p className="text-primary">{"→ webhook scheduled · attempt 1 of 5 · backoff 5s"}</p>
+              <p className="text-primary">{"→ Ops Brain opened incident INC-2418 · evidence: 2 logs, 1 commit, 1 alert"}</p>
             </div>
           </div>
         </div>
@@ -115,36 +133,57 @@ function Landing() {
 
       {/* Problem */}
       <section className="border-b">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-2">
-          <div>
+        <div className="mx-auto max-w-6xl px-4 py-20">
+          <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-wider text-primary">The problem</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight">Production becomes your real test environment.</h2>
+            <p className="mt-3 text-muted-foreground">Then every failure becomes a 2am incident channel.</p>
           </div>
-          <div className="space-y-4 text-base text-muted-foreground">
-            <p>Fintech sandboxes are too clean. They always return 200. They never time out. They never deliver a webhook twice. They never reorder events.</p>
-            <p>So failures only show up after launch — in customer complaints, stuck transactions, and 2am incident channels.</p>
-            <p className="text-foreground font-medium">FlowSim reproduces the messy parts on demand.</p>
+          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {problems.map((p) => (
+              <Card key={p.title}>
+                <CardHeader>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-destructive/10 text-destructive">
+                    <p.icon className="h-5 w-5" />
+                  </div>
+                  <CardTitle className="mt-3 text-base">{p.title}</CardTitle>
+                </CardHeader>
+                <CardContent><CardDescription className="text-sm">{p.body}</CardDescription></CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Solution */}
       <section className="border-b bg-muted/30">
-        <div className="mx-auto max-w-6xl px-4 py-20">
-          <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-20 md:grid-cols-2">
+          <div>
             <p className="text-sm font-semibold uppercase tracking-wider text-primary">The solution</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight">A programmable sandbox for the failures that matter.</h2>
-            <p className="mt-3 text-muted-foreground">Compose scenarios, simulate webhooks, inspect timelines, and let AI explain what went wrong.</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight">One platform for simulation and investigation.</h2>
+            <p className="mt-3 text-muted-foreground">FlowSim combines a fintech sandbox with an AI incident copilot, so you can reproduce failures and resolve them in the same place.</p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Button asChild><Link to="/signup">Get started</Link></Button>
+              <Button asChild variant="outline"><Link to="/docs">Read the docs</Link></Button>
+            </div>
           </div>
+          <ul className="space-y-3">
+            {solutionPoints.map((s) => (
+              <li key={s} className="flex items-start gap-3 rounded-md border bg-card p-3 text-sm">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary"><Check className="h-3.5 w-3.5" /></div>
+                {s}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       {/* Features */}
-      <section id="features" className="border-b">
+      <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 py-20">
           <h2 className="text-3xl font-semibold tracking-tight">Everything you need to harden integrations</h2>
-          <p className="mt-2 text-muted-foreground">Built by engineers who shipped payment rails to millions of users.</p>
-          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <p className="mt-2 text-muted-foreground">From simulation to investigation, on one timeline.</p>
+          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {features.map((f) => (
               <Card key={f.title}>
                 <CardHeader>
@@ -161,23 +200,67 @@ function Landing() {
       </section>
 
       {/* How it works */}
-      <section id="how" className="border-b bg-muted/30">
+      <section className="border-b bg-muted/30">
         <div className="mx-auto max-w-6xl px-4 py-20">
           <h2 className="text-3xl font-semibold tracking-tight">How it works</h2>
-          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
             {steps.map((s) => (
               <div key={s.n} className="rounded-xl border bg-card p-5">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-mono text-sm font-semibold">{s.n}</div>
-                <h3 className="mt-4 text-base font-semibold">{s.title}</h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">{s.body}</p>
+                <h3 className="mt-4 text-sm font-semibold">{s.title}</h3>
+                <p className="mt-1.5 text-xs text-muted-foreground">{s.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="border-b">
+      {/* Integrations */}
+      <section className="border-b">
+        <div className="mx-auto max-w-6xl px-4 py-20">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-3xl font-semibold tracking-tight">Plugs into the tools you already use</h2>
+              <p className="mt-2 text-muted-foreground">Bring your observability, code, and ops stack into every incident.</p>
+            </div>
+            <Button asChild variant="ghost" className="hidden md:inline-flex"><Link to="/app/integrations">Browse all <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
+          </div>
+          <div className="mt-10 grid gap-3 md:grid-cols-3 lg:grid-cols-4">
+            {integrations.map((i) => (
+              <div key={i.name} className="flex items-start gap-3 rounded-xl border bg-card p-4">
+                <div className="flex h-9 w-9 items-center justify-center rounded-md bg-muted text-foreground">
+                  <PlugZap className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">{i.name}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{i.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Use cases */}
+      <section className="border-b bg-muted/30">
+        <div className="mx-auto max-w-6xl px-4 py-20">
+          <h2 className="text-3xl font-semibold tracking-tight">Use cases</h2>
+          <p className="mt-2 text-muted-foreground">What teams ship with FlowSim.</p>
+          <div className="mt-10 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {useCases.map((u) => (
+              <div key={u.title} className="flex items-center gap-3 rounded-xl border bg-card p-4">
+                <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <u.icon className="h-4 w-4" />
+                </div>
+                <p className="text-sm font-medium">{u.title}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing preview */}
+      <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 py-20">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-semibold tracking-tight">Simple, predictable pricing</h2>
@@ -203,52 +286,32 @@ function Landing() {
                     ))}
                   </ul>
                   <Button asChild className="w-full" variant={p.featured ? "default" : "outline"}>
-                    <Link to="/app">{p.cta}</Link>
+                    <Link to="/signup">{p.cta}</Link>
                   </Button>
                 </CardContent>
               </Card>
             ))}
           </div>
+          <div className="mt-6 text-center">
+            <Button asChild variant="link"><Link to="/pricing">See full pricing <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-background">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-4">
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground"><Waves className="h-4 w-4" /></div>
-              <span className="text-sm font-semibold">FlowSim</span>
-            </div>
-            <p className="mt-3 max-w-xs text-sm text-muted-foreground">A programmable sandbox for fintech integrations.</p>
-          </div>
-          <div>
-            <p className="text-sm font-semibold">Product</p>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="#features" className="hover:text-foreground">Features</a></li>
-              <li><a href="#pricing" className="hover:text-foreground">Pricing</a></li>
-              <li><Link to="/app" className="hover:text-foreground">Dashboard</Link></li>
-            </ul>
-          </div>
-          <div>
-            <p className="text-sm font-semibold">Company</p>
-            <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground">About</a></li>
-              <li><a href="#" className="hover:text-foreground">Docs</a></li>
-              <li><a href="#" className="hover:text-foreground">Contact</a></li>
-            </ul>
+      {/* CTA */}
+      <section className="border-b">
+        <div className="mx-auto max-w-4xl px-4 py-20 text-center">
+          <ListChecks className="mx-auto h-8 w-8 text-primary" />
+          <h2 className="mt-4 text-3xl font-semibold tracking-tight">Ship payment integrations with confidence.</h2>
+          <p className="mx-auto mt-3 max-w-xl text-muted-foreground">Simulate the failure. Investigate the incident. Close the ticket — all from FlowSim.</p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Button asChild size="lg"><Link to="/signup">Start free</Link></Button>
+            <Button asChild size="lg" variant="outline"><Link to="/app/overview">View demo dashboard</Link></Button>
           </div>
         </div>
-        <div className="border-t">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 text-xs text-muted-foreground">
-            <p>© 2026 FlowSim Labs. All sandbox, no real funds.</p>
-            <div className="flex gap-3">
-              <a href="#" aria-label="GitHub"><Github className="h-4 w-4" /></a>
-              <a href="#" aria-label="Twitter"><Twitter className="h-4 w-4" /></a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      </section>
+
+      <MarketingFooter />
     </div>
   );
 }

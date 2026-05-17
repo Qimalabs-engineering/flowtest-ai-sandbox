@@ -9,6 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as DocsRouteImport } from './routes/docs'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
@@ -17,6 +21,7 @@ import { Route as AppTransactionsRouteImport } from './routes/app.transactions'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppScenariosRouteImport } from './routes/app.scenarios'
 import { Route as AppProvidersRouteImport } from './routes/app.providers'
+import { Route as AppOverviewRouteImport } from './routes/app.overview'
 import { Route as AppOpsBrainRouteImport } from './routes/app.ops-brain'
 import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
 import { Route as AppAssistantRouteImport } from './routes/app.assistant'
@@ -25,6 +30,26 @@ import { Route as AppTransactionIdRouteImport } from './routes/app.transaction.$
 import { Route as AppIntegrationsIdRouteImport } from './routes/app.integrations.$id'
 import { Route as AppIncidentIdRouteImport } from './routes/app.incident.$id'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
@@ -63,6 +88,11 @@ const AppScenariosRoute = AppScenariosRouteImport.update({
 const AppProvidersRoute = AppProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOverviewRoute = AppOverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
   getParentRoute: () => AppRoute,
 } as any)
 const AppOpsBrainRoute = AppOpsBrainRouteImport.update({
@@ -104,10 +134,15 @@ const AppIncidentIdRoute = AppIncidentIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/docs': typeof DocsRoute
+  '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
+  '/signup': typeof SignupRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
+  '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
@@ -120,10 +155,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/docs': typeof DocsRoute
+  '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
+  '/signup': typeof SignupRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
+  '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
@@ -138,10 +178,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/docs': typeof DocsRoute
+  '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
+  '/signup': typeof SignupRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
+  '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
@@ -157,10 +202,15 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/docs'
+    | '/login'
+    | '/pricing'
+    | '/signup'
     | '/app/api-keys'
     | '/app/assistant'
     | '/app/integrations'
     | '/app/ops-brain'
+    | '/app/overview'
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
@@ -173,10 +223,15 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/docs'
+    | '/login'
+    | '/pricing'
+    | '/signup'
     | '/app/api-keys'
     | '/app/assistant'
     | '/app/integrations'
     | '/app/ops-brain'
+    | '/app/overview'
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
@@ -190,10 +245,15 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/docs'
+    | '/login'
+    | '/pricing'
+    | '/signup'
     | '/app/api-keys'
     | '/app/assistant'
     | '/app/integrations'
     | '/app/ops-brain'
+    | '/app/overview'
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
@@ -208,10 +268,42 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  DocsRoute: typeof DocsRoute
+  LoginRoute: typeof LoginRoute
+  PricingRoute: typeof PricingRoute
+  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app': {
       id: '/app'
       path: '/app'
@@ -266,6 +358,13 @@ declare module '@tanstack/react-router' {
       path: '/providers'
       fullPath: '/app/providers'
       preLoaderRoute: typeof AppProvidersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/overview': {
+      id: '/app/overview'
+      path: '/overview'
+      fullPath: '/app/overview'
+      preLoaderRoute: typeof AppOverviewRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/ops-brain': {
@@ -337,6 +436,7 @@ interface AppRouteChildren {
   AppAssistantRoute: typeof AppAssistantRoute
   AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
   AppOpsBrainRoute: typeof AppOpsBrainRoute
+  AppOverviewRoute: typeof AppOverviewRoute
   AppProvidersRoute: typeof AppProvidersRoute
   AppScenariosRoute: typeof AppScenariosRoute
   AppSettingsRoute: typeof AppSettingsRoute
@@ -352,6 +452,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAssistantRoute: AppAssistantRoute,
   AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
   AppOpsBrainRoute: AppOpsBrainRoute,
+  AppOverviewRoute: AppOverviewRoute,
   AppProvidersRoute: AppProvidersRoute,
   AppScenariosRoute: AppScenariosRoute,
   AppSettingsRoute: AppSettingsRoute,
@@ -367,6 +468,10 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  DocsRoute: DocsRoute,
+  LoginRoute: LoginRoute,
+  PricingRoute: PricingRoute,
+  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

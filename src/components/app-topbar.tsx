@@ -1,4 +1,10 @@
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,16 +34,43 @@ export function AppTopbar() {
         <Input placeholder="Search transactions, providers, events…" className="pl-8 h-9" />
       </div>
       <div className="ml-auto flex items-center gap-2">
-        <Select defaultValue="sandbox">
-          <SelectTrigger className="h-9 w-[170px]">
+        <Select defaultValue="test-sandbox">
+          <SelectTrigger className="h-9 w-[180px]">
             <SelectValue placeholder="Environment" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="sandbox">Sandbox</SelectItem>
-            <SelectItem value="staging">Staging</SelectItem>
-            <SelectItem value="production-simulation">Production sim</SelectItem>
+          <SelectContent className="w-[320px]">
+            <SelectItem value="test-sandbox">
+              <div className="flex flex-col">
+                <span className="font-medium">Test Sandbox</span>
+                <span className="text-xs text-muted-foreground">Fully simulated providers and fake transactions.</span>
+              </div>
+            </SelectItem>
+            <SelectItem value="staging-mirror">
+              <div className="flex flex-col">
+                <span className="font-medium">Staging Mirror</span>
+                <span className="text-xs text-muted-foreground">Mirrors a customer's staging setup for integration testing.</span>
+              </div>
+            </SelectItem>
+            <SelectItem value="production-replay">
+              <div className="flex flex-col">
+                <span className="font-medium">Production Replay</span>
+                <span className="text-xs text-muted-foreground">Safely replays production-like incidents — no real money moves.</span>
+              </div>
+            </SelectItem>
           </SelectContent>
         </Select>
+        <TooltipProvider delayDuration={150}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-muted-foreground">
+                <Info className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-xs text-xs leading-relaxed">
+              FlowSim environments never move real funds. Test Sandbox, Staging Mirror, and Production Replay all simulate provider behavior.
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-4 w-4" />
           <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-destructive" />

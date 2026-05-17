@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  { title: "Overview", url: "/app", icon: LayoutDashboard, exact: true },
+  { title: "Overview", url: "/app/overview", icon: LayoutDashboard },
   { title: "Providers", url: "/app/providers", icon: Server },
   { title: "Scenarios", url: "/app/scenarios", icon: Workflow },
   { title: "Transactions", url: "/app/transactions", icon: ArrowLeftRight },
@@ -44,13 +44,13 @@ const secondary = [
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isActive = (url: string, exact?: boolean) =>
-    exact ? pathname === url : pathname === url || pathname.startsWith(url + "/");
+  const isActive = (url: string) =>
+    pathname === url || pathname.startsWith(url + "/");
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <Link to="/app" className="flex items-center gap-2 px-2 py-1.5">
+        <Link to="/app/overview" className="flex items-center gap-2 px-2 py-1.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <Waves className="h-4 w-4" />
           </div>
@@ -67,7 +67,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url, item.exact)} tooltip={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
                     <Link to={item.url}>
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
