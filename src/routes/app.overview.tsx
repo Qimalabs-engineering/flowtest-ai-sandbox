@@ -38,6 +38,7 @@ import {
 } from "recharts";
 import { transactions, failureTrend, topFailing } from "@/lib/mock-data";
 import { incidents, opsSummary } from "@/lib/ops-data";
+import { failureClusters, getFlowDefinition, findScenario, stateLabel } from "@/lib/flow-data";
 import { StatusBadge } from "@/components/status-badge";
 import { Brain, Plug, Ticket, AlertTriangle } from "lucide-react";
 
