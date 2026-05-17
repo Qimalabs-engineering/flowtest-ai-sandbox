@@ -74,7 +74,8 @@ const kindIcon = {
 } as const;
 
 function IncidentDetail() {
-  const { incident } = Route.useLoaderData();
+  const data = Route.useLoaderData();
+  const incident = data.incident as (typeof incidents)[number];
   const [slackOpen, setSlackOpen] = useState(false);
   const [jiraOpen, setJiraOpen] = useState(false);
 
