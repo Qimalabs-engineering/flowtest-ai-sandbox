@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { flowDefinitions, flowInstances, type FlowType } from "@/lib/flow-data";
 
-export const Route = createFileRoute("/app/flows")({
+export const Route = createFileRoute("/app/flows/")({
   component: FlowsPage,
 });
 
