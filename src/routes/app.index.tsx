@@ -37,7 +37,9 @@ import {
   YAxis,
 } from "recharts";
 import { transactions, failureTrend, topFailing } from "@/lib/mock-data";
+import { incidents, opsSummary } from "@/lib/ops-data";
 import { StatusBadge } from "@/components/status-badge";
+import { Brain, Plug, Ticket, AlertTriangle } from "lucide-react";
 
 export const Route = createFileRoute("/app/")({
   component: Overview,
@@ -50,6 +52,13 @@ const stats = [
   { label: "Pending", value: "1,204", delta: "-0.8%", up: true, icon: Clock },
   { label: "Webhook delivery", value: "98.4%", delta: "+0.6%", up: true, icon: Webhook },
   { label: "Provider uptime", value: "99.1%", delta: "+0.1%", up: true, icon: Wallet },
+];
+
+const opsStats = [
+  { label: "Connected integrations", value: opsSummary.connectedIntegrations, icon: Plug },
+  { label: "Active incidents", value: opsSummary.activeIncidents, icon: AlertTriangle },
+  { label: "AI investigations", value: opsSummary.investigationsCompleted, icon: Brain },
+  { label: "Auto-created issues", value: opsSummary.autoIssues, icon: Ticket },
 ];
 
 function Overview() {
