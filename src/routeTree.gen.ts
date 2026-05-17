@@ -9,38 +9,168 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppWebhooksRouteImport } from './routes/app.webhooks'
+import { Route as AppTransactionsRouteImport } from './routes/app.transactions'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppScenariosRouteImport } from './routes/app.scenarios'
+import { Route as AppProvidersRouteImport } from './routes/app.providers'
+import { Route as AppAssistantRouteImport } from './routes/app.assistant'
+import { Route as AppApiKeysRouteImport } from './routes/app.api-keys'
+import { Route as AppTransactionIdRouteImport } from './routes/app.transaction.$id'
 
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWebhooksRoute = AppWebhooksRouteImport.update({
+  id: '/webhooks',
+  path: '/webhooks',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTransactionsRoute = AppTransactionsRouteImport.update({
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppScenariosRoute = AppScenariosRouteImport.update({
+  id: '/scenarios',
+  path: '/scenarios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProvidersRoute = AppProvidersRouteImport.update({
+  id: '/providers',
+  path: '/providers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAssistantRoute = AppAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppApiKeysRoute = AppApiKeysRouteImport.update({
+  id: '/api-keys',
+  path: '/api-keys',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTransactionIdRoute = AppTransactionIdRouteImport.update({
+  id: '/transaction/$id',
+  path: '/transaction/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/app/api-keys': typeof AppApiKeysRoute
+  '/app/assistant': typeof AppAssistantRoute
+  '/app/providers': typeof AppProvidersRoute
+  '/app/scenarios': typeof AppScenariosRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/transactions': typeof AppTransactionsRoute
+  '/app/webhooks': typeof AppWebhooksRoute
+  '/app/': typeof AppIndexRoute
+  '/app/transaction/$id': typeof AppTransactionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app/api-keys': typeof AppApiKeysRoute
+  '/app/assistant': typeof AppAssistantRoute
+  '/app/providers': typeof AppProvidersRoute
+  '/app/scenarios': typeof AppScenariosRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/transactions': typeof AppTransactionsRoute
+  '/app/webhooks': typeof AppWebhooksRoute
+  '/app': typeof AppIndexRoute
+  '/app/transaction/$id': typeof AppTransactionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/app/api-keys': typeof AppApiKeysRoute
+  '/app/assistant': typeof AppAssistantRoute
+  '/app/providers': typeof AppProvidersRoute
+  '/app/scenarios': typeof AppScenariosRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/transactions': typeof AppTransactionsRoute
+  '/app/webhooks': typeof AppWebhooksRoute
+  '/app/': typeof AppIndexRoute
+  '/app/transaction/$id': typeof AppTransactionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/app/api-keys'
+    | '/app/assistant'
+    | '/app/providers'
+    | '/app/scenarios'
+    | '/app/settings'
+    | '/app/transactions'
+    | '/app/webhooks'
+    | '/app/'
+    | '/app/transaction/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/app/api-keys'
+    | '/app/assistant'
+    | '/app/providers'
+    | '/app/scenarios'
+    | '/app/settings'
+    | '/app/transactions'
+    | '/app/webhooks'
+    | '/app'
+    | '/app/transaction/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/app/api-keys'
+    | '/app/assistant'
+    | '/app/providers'
+    | '/app/scenarios'
+    | '/app/settings'
+    | '/app/transactions'
+    | '/app/webhooks'
+    | '/app/'
+    | '/app/transaction/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +178,101 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/webhooks': {
+      id: '/app/webhooks'
+      path: '/webhooks'
+      fullPath: '/app/webhooks'
+      preLoaderRoute: typeof AppWebhooksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/transactions': {
+      id: '/app/transactions'
+      path: '/transactions'
+      fullPath: '/app/transactions'
+      preLoaderRoute: typeof AppTransactionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/scenarios': {
+      id: '/app/scenarios'
+      path: '/scenarios'
+      fullPath: '/app/scenarios'
+      preLoaderRoute: typeof AppScenariosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/providers': {
+      id: '/app/providers'
+      path: '/providers'
+      fullPath: '/app/providers'
+      preLoaderRoute: typeof AppProvidersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/assistant': {
+      id: '/app/assistant'
+      path: '/assistant'
+      fullPath: '/app/assistant'
+      preLoaderRoute: typeof AppAssistantRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/api-keys': {
+      id: '/app/api-keys'
+      path: '/api-keys'
+      fullPath: '/app/api-keys'
+      preLoaderRoute: typeof AppApiKeysRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/transaction/$id': {
+      id: '/app/transaction/$id'
+      path: '/transaction/$id'
+      fullPath: '/app/transaction/$id'
+      preLoaderRoute: typeof AppTransactionIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppApiKeysRoute: typeof AppApiKeysRoute
+  AppAssistantRoute: typeof AppAssistantRoute
+  AppProvidersRoute: typeof AppProvidersRoute
+  AppScenariosRoute: typeof AppScenariosRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppTransactionsRoute: typeof AppTransactionsRoute
+  AppWebhooksRoute: typeof AppWebhooksRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppTransactionIdRoute: typeof AppTransactionIdRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppApiKeysRoute: AppApiKeysRoute,
+  AppAssistantRoute: AppAssistantRoute,
+  AppProvidersRoute: AppProvidersRoute,
+  AppScenariosRoute: AppScenariosRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppTransactionsRoute: AppTransactionsRoute,
+  AppWebhooksRoute: AppWebhooksRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppTransactionIdRoute: AppTransactionIdRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
