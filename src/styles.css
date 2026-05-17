@@ -145,4 +145,129 @@
     font-family: var(--font-sans);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+  /* Smooth, engineered feel on every interactive surface */
+  button, a, input, textarea, select, [role="button"], [role="tab"], [role="menuitem"] {
+    transition-property: color, background-color, border-color, box-shadow, transform, opacity, filter;
+    transition-duration: 180ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 18%, transparent);
+  }
+}
+
+/* ---------- FlowSim motion system ---------- */
+@layer utilities {
+  /* Core keyframes */
+  @keyframes fs-fade-up {
+    from { opacity: 0; transform: translate3d(0, 8px, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  @keyframes fs-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes fs-slide-in-left {
+    from { opacity: 0; transform: translate3d(-10px, 0, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  @keyframes fs-slide-in-right {
+    from { opacity: 0; transform: translate3d(12px, 0, 0); }
+    to { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  @keyframes fs-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes fs-pulse-soft {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 35%, transparent); }
+    50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--primary) 0%, transparent); }
+  }
+  @keyframes fs-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-3px); }
+    40% { transform: translateX(3px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+  }
+  @keyframes fs-blink {
+    50% { opacity: 0; }
+  }
+  @keyframes fs-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  .fs-fade-up { animation: fs-fade-up 240ms cubic-bezier(0.4, 0, 0.2, 1) both; }
+  .fs-fade-in { animation: fs-fade-in 220ms ease-out both; }
+  .fs-slide-in-left { animation: fs-slide-in-left 220ms cubic-bezier(0.4, 0, 0.2, 1) both; }
+  .fs-slide-in-right { animation: fs-slide-in-right 220ms cubic-bezier(0.4, 0, 0.2, 1) both; }
+  .fs-pulse-soft { animation: fs-pulse-soft 2.4s ease-in-out infinite; }
+  .fs-shake { animation: fs-shake 280ms cubic-bezier(0.4, 0, 0.2, 1) both; }
+  .fs-blink { animation: fs-blink 1.05s steps(2, start) infinite; }
+
+  /* Stagger: animation-delay per child (up to 12) */
+  .fs-stagger > * { animation: fs-fade-up 280ms cubic-bezier(0.4, 0, 0.2, 1) both; }
+  .fs-stagger > *:nth-child(1) { animation-delay: 20ms; }
+  .fs-stagger > *:nth-child(2) { animation-delay: 70ms; }
+  .fs-stagger > *:nth-child(3) { animation-delay: 120ms; }
+  .fs-stagger > *:nth-child(4) { animation-delay: 170ms; }
+  .fs-stagger > *:nth-child(5) { animation-delay: 220ms; }
+  .fs-stagger > *:nth-child(6) { animation-delay: 270ms; }
+  .fs-stagger > *:nth-child(7) { animation-delay: 320ms; }
+  .fs-stagger > *:nth-child(8) { animation-delay: 370ms; }
+  .fs-stagger > *:nth-child(9) { animation-delay: 420ms; }
+  .fs-stagger > *:nth-child(10) { animation-delay: 470ms; }
+  .fs-stagger > *:nth-child(n+11) { animation-delay: 520ms; }
+
+  /* Shimmer for skeletons */
+  .fs-shimmer {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--muted) 60%, transparent) 0%,
+      color-mix(in oklab, var(--foreground) 6%, transparent) 50%,
+      color-mix(in oklab, var(--muted) 60%, transparent) 100%
+    );
+    background-size: 200% 100%;
+    animation: fs-shimmer 1.6s linear infinite;
+  }
+
+  /* Press effect on clickable surfaces */
+  .fs-press { transition: transform 160ms cubic-bezier(0.4, 0, 0.2, 1); }
+  .fs-press:active { transform: scale(0.97); }
+
+  /* Card lift on hover */
+  .fs-card-hover {
+    transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 180ms cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .fs-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 40px -24px color-mix(in oklab, var(--primary) 35%, transparent);
+    border-color: color-mix(in oklab, var(--primary) 25%, var(--border));
+  }
+
+  /* Active timeline node */
+  .fs-glow-active {
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 18%, transparent);
+    animation: fs-pulse-soft 2.4s ease-in-out infinite;
+  }
+
+  /* Typing caret */
+  .fs-caret::after {
+    content: "▍";
+    display: inline-block;
+    margin-left: 2px;
+    color: var(--primary);
+    animation: fs-blink 1.05s steps(2, start) infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
 }
