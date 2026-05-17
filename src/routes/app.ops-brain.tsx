@@ -75,6 +75,8 @@ function OpsBrainPage() {
         ))}
       </div>
 
+      <ClusterSection />
+
       <Card>
         <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
