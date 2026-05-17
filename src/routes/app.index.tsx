@@ -144,6 +144,59 @@ function Overview() {
         </Card>
       </div>
 
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {opsStats.map((s) => (
+          <Card key={s.label}>
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <CardDescription className="text-xs">{s.label}</CardDescription>
+                <s.icon className="h-4 w-4 text-primary" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-semibold">{s.value}</div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between gap-2">
+          <div>
+            <CardTitle>Recent incidents</CardTitle>
+            <CardDescription>Cross-source signals investigated by Ops Brain.</CardDescription>
+          </div>
+          <Button asChild variant="outline" size="sm"><Link to="/app/ops-brain">Open Ops Brain</Link></Button>
+        </CardHeader>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Incident</TableHead>
+                <TableHead>Provider</TableHead>
+                <TableHead>Severity</TableHead>
+                <TableHead>Confidence</TableHead>
+                <TableHead className="text-right">Detected</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {incidents.slice(0, 4).map((i) => (
+                <TableRow key={i.id} className="cursor-pointer">
+                  <TableCell>
+                    <Link to="/app/incident/$id" params={{ id: i.id }} className="hover:underline text-sm font-medium">{i.title}</Link>
+                    <div className="text-xs text-muted-foreground">{i.service}</div>
+                  </TableCell>
+                  <TableCell className="text-sm">{i.provider}</TableCell>
+                  <TableCell className="capitalize text-xs">{i.severity}</TableCell>
+                  <TableCell className="text-sm">{Math.round(i.confidence * 100)}%</TableCell>
+                  <TableCell className="text-right text-xs text-muted-foreground">{new Date(i.detectedAt).toLocaleTimeString()}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Recent transactions</CardTitle>
