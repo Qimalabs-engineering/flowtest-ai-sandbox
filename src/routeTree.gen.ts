@@ -17,9 +17,13 @@ import { Route as AppTransactionsRouteImport } from './routes/app.transactions'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppScenariosRouteImport } from './routes/app.scenarios'
 import { Route as AppProvidersRouteImport } from './routes/app.providers'
+import { Route as AppOpsBrainRouteImport } from './routes/app.ops-brain'
+import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
 import { Route as AppAssistantRouteImport } from './routes/app.assistant'
 import { Route as AppApiKeysRouteImport } from './routes/app.api-keys'
 import { Route as AppTransactionIdRouteImport } from './routes/app.transaction.$id'
+import { Route as AppIntegrationsIdRouteImport } from './routes/app.integrations.$id'
+import { Route as AppIncidentIdRouteImport } from './routes/app.incident.$id'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
@@ -61,6 +65,16 @@ const AppProvidersRoute = AppProvidersRouteImport.update({
   path: '/providers',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOpsBrainRoute = AppOpsBrainRouteImport.update({
+  id: '/ops-brain',
+  path: '/ops-brain',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAssistantRoute = AppAssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
@@ -76,30 +90,48 @@ const AppTransactionIdRoute = AppTransactionIdRouteImport.update({
   path: '/transaction/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppIntegrationsIdRoute = AppIntegrationsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
+const AppIncidentIdRoute = AppIncidentIdRouteImport.update({
+  id: '/incident/$id',
+  path: '/incident/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/integrations': typeof AppIntegrationsRouteWithChildren
+  '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/transactions': typeof AppTransactionsRoute
   '/app/webhooks': typeof AppWebhooksRoute
   '/app/': typeof AppIndexRoute
+  '/app/incident/$id': typeof AppIncidentIdRoute
+  '/app/integrations/$id': typeof AppIntegrationsIdRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/integrations': typeof AppIntegrationsRouteWithChildren
+  '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/transactions': typeof AppTransactionsRoute
   '/app/webhooks': typeof AppWebhooksRoute
   '/app': typeof AppIndexRoute
+  '/app/incident/$id': typeof AppIncidentIdRoute
+  '/app/integrations/$id': typeof AppIntegrationsIdRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
 }
 export interface FileRoutesById {
@@ -108,12 +140,16 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/integrations': typeof AppIntegrationsRouteWithChildren
+  '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/transactions': typeof AppTransactionsRoute
   '/app/webhooks': typeof AppWebhooksRoute
   '/app/': typeof AppIndexRoute
+  '/app/incident/$id': typeof AppIncidentIdRoute
+  '/app/integrations/$id': typeof AppIntegrationsIdRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
 }
 export interface FileRouteTypes {
@@ -123,24 +159,32 @@ export interface FileRouteTypes {
     | '/app'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/integrations'
+    | '/app/ops-brain'
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
     | '/app/transactions'
     | '/app/webhooks'
     | '/app/'
+    | '/app/incident/$id'
+    | '/app/integrations/$id'
     | '/app/transaction/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/integrations'
+    | '/app/ops-brain'
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
     | '/app/transactions'
     | '/app/webhooks'
     | '/app'
+    | '/app/incident/$id'
+    | '/app/integrations/$id'
     | '/app/transaction/$id'
   id:
     | '__root__'
@@ -148,12 +192,16 @@ export interface FileRouteTypes {
     | '/app'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/integrations'
+    | '/app/ops-brain'
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
     | '/app/transactions'
     | '/app/webhooks'
     | '/app/'
+    | '/app/incident/$id'
+    | '/app/integrations/$id'
     | '/app/transaction/$id'
   fileRoutesById: FileRoutesById
 }
@@ -220,6 +268,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProvidersRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/ops-brain': {
+      id: '/app/ops-brain'
+      path: '/ops-brain'
+      fullPath: '/app/ops-brain'
+      preLoaderRoute: typeof AppOpsBrainRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/integrations': {
+      id: '/app/integrations'
+      path: '/integrations'
+      fullPath: '/app/integrations'
+      preLoaderRoute: typeof AppIntegrationsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/assistant': {
       id: '/app/assistant'
       path: '/assistant'
@@ -241,30 +303,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTransactionIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/integrations/$id': {
+      id: '/app/integrations/$id'
+      path: '/$id'
+      fullPath: '/app/integrations/$id'
+      preLoaderRoute: typeof AppIntegrationsIdRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
+    '/app/incident/$id': {
+      id: '/app/incident/$id'
+      path: '/incident/$id'
+      fullPath: '/app/incident/$id'
+      preLoaderRoute: typeof AppIncidentIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
+
+interface AppIntegrationsRouteChildren {
+  AppIntegrationsIdRoute: typeof AppIntegrationsIdRoute
+}
+
+const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
+  AppIntegrationsIdRoute: AppIntegrationsIdRoute,
+}
+
+const AppIntegrationsRouteWithChildren = AppIntegrationsRoute._addFileChildren(
+  AppIntegrationsRouteChildren,
+)
 
 interface AppRouteChildren {
   AppApiKeysRoute: typeof AppApiKeysRoute
   AppAssistantRoute: typeof AppAssistantRoute
+  AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
+  AppOpsBrainRoute: typeof AppOpsBrainRoute
   AppProvidersRoute: typeof AppProvidersRoute
   AppScenariosRoute: typeof AppScenariosRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTransactionsRoute: typeof AppTransactionsRoute
   AppWebhooksRoute: typeof AppWebhooksRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppIncidentIdRoute: typeof AppIncidentIdRoute
   AppTransactionIdRoute: typeof AppTransactionIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppApiKeysRoute: AppApiKeysRoute,
   AppAssistantRoute: AppAssistantRoute,
+  AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
+  AppOpsBrainRoute: AppOpsBrainRoute,
   AppProvidersRoute: AppProvidersRoute,
   AppScenariosRoute: AppScenariosRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTransactionsRoute: AppTransactionsRoute,
   AppWebhooksRoute: AppWebhooksRoute,
   AppIndexRoute: AppIndexRoute,
+  AppIncidentIdRoute: AppIncidentIdRoute,
   AppTransactionIdRoute: AppTransactionIdRoute,
 }
 
@@ -277,13 +371,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
