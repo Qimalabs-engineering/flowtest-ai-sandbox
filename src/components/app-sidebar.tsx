@@ -11,6 +11,7 @@ import {
   Waves,
   Plug,
   Brain,
+  AlertTriangle,
 } from "lucide-react";
 
 import {
@@ -28,11 +29,13 @@ import {
 
 const items = [
   { title: "Overview", url: "/app/overview", icon: LayoutDashboard },
-  { title: "Providers", url: "/app/providers", icon: Server },
-  { title: "Scenarios", url: "/app/scenarios", icon: Workflow },
+  { title: "Flows", url: "/app/flows", icon: Workflow },
   { title: "Transactions", url: "/app/transactions", icon: ArrowLeftRight },
+  { title: "Failures", url: "/app/failures", icon: AlertTriangle },
   { title: "Webhooks", url: "/app/webhooks", icon: Webhook },
   { title: "Ops Brain", url: "/app/ops-brain", icon: Brain },
+  { title: "Providers", url: "/app/providers", icon: Server },
+  { title: "Scenarios", url: "/app/scenarios", icon: Workflow },
   { title: "Integrations", url: "/app/integrations", icon: Plug },
   { title: "AI Assistant", url: "/app/assistant", icon: Sparkles },
 ];
