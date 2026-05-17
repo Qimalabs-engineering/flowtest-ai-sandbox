@@ -245,7 +245,7 @@ function IncidentDetail() {
         </TabsContent>
 
         <TabsContent value="fixes" className="mt-4">
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-2 fs-stagger">
             {suggestedFixes.map((f) => (
               <Card key={f.id}>
                 <CardHeader className="pb-2">
