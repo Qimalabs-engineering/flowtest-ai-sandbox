@@ -421,13 +421,13 @@ function Landing() {
       {/* Integrations */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Integrations</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Plugs into the tools you already use</h2>
-              <p className="mt-3 text-muted-foreground">Bring your observability, code, and ops stack into every incident.</p>
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Integrations</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Plugs into the tools you already use</h2>
+            <p className="mt-4 text-muted-foreground">Bring your observability, code, and ops stack into every incident.</p>
+            <div className="mt-6 flex justify-center">
+              <Button asChild variant="outline" size="sm"><Link to="/app/integrations">Browse all <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
             </div>
-            <Button asChild variant="ghost" className="hidden md:inline-flex"><Link to="/app/integrations">Browse all <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
           </div>
           <div className="mt-10 grid gap-3 md:grid-cols-3 lg:grid-cols-4">
             {integrations.map((i) => (
