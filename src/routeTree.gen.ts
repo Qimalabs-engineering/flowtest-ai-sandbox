@@ -28,9 +28,13 @@ import { Route as AppOpsBrainRouteImport } from './routes/app.ops-brain'
 import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
 import { Route as AppAssistantRouteImport } from './routes/app.assistant'
 import { Route as AppApiKeysRouteImport } from './routes/app.api-keys'
+import { Route as AdminTransactionsRouteImport } from './routes/admin.transactions'
 import { Route as AdminTenantsRouteImport } from './routes/admin.tenants'
+import { Route as AdminScenariosRouteImport } from './routes/admin.scenarios'
 import { Route as AdminProvidersRouteImport } from './routes/admin.providers'
 import { Route as AdminOverviewRouteImport } from './routes/admin.overview'
+import { Route as AdminIntegrationsRouteImport } from './routes/admin.integrations'
+import { Route as AdminIncidentsRouteImport } from './routes/admin.incidents'
 import { Route as AppTransactionIdRouteImport } from './routes/app.transaction.$id'
 import { Route as AppIntegrationsIdRouteImport } from './routes/app.integrations.$id'
 import { Route as AppIncidentIdRouteImport } from './routes/app.incident.$id'
@@ -131,9 +135,19 @@ const AppApiKeysRoute = AppApiKeysRouteImport.update({
   path: '/api-keys',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminTransactionsRoute = AdminTransactionsRouteImport.update({
+  id: '/transactions',
+  path: '/transactions',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminTenantsRoute = AdminTenantsRouteImport.update({
   id: '/tenants',
   path: '/tenants',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminScenariosRoute = AdminScenariosRouteImport.update({
+  id: '/scenarios',
+  path: '/scenarios',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminProvidersRoute = AdminProvidersRouteImport.update({
@@ -144,6 +158,16 @@ const AdminProvidersRoute = AdminProvidersRouteImport.update({
 const AdminOverviewRoute = AdminOverviewRouteImport.update({
   id: '/overview',
   path: '/overview',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminIntegrationsRoute = AdminIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminIncidentsRoute = AdminIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
   getParentRoute: () => AdminRoute,
 } as any)
 const AppTransactionIdRoute = AppTransactionIdRouteImport.update({
@@ -175,9 +199,13 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/admin/incidents': typeof AdminIncidentsRoute
+  '/admin/integrations': typeof AdminIntegrationsRoute
   '/admin/overview': typeof AdminOverviewRoute
   '/admin/providers': typeof AdminProvidersRoute
+  '/admin/scenarios': typeof AdminScenariosRoute
   '/admin/tenants': typeof AdminTenantsRouteWithChildren
+  '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
@@ -201,9 +229,13 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/admin/incidents': typeof AdminIncidentsRoute
+  '/admin/integrations': typeof AdminIntegrationsRoute
   '/admin/overview': typeof AdminOverviewRoute
   '/admin/providers': typeof AdminProvidersRoute
+  '/admin/scenarios': typeof AdminScenariosRoute
   '/admin/tenants': typeof AdminTenantsRouteWithChildren
+  '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
@@ -230,9 +262,13 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
+  '/admin/incidents': typeof AdminIncidentsRoute
+  '/admin/integrations': typeof AdminIntegrationsRoute
   '/admin/overview': typeof AdminOverviewRoute
   '/admin/providers': typeof AdminProvidersRoute
+  '/admin/scenarios': typeof AdminScenariosRoute
   '/admin/tenants': typeof AdminTenantsRouteWithChildren
+  '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
@@ -260,9 +296,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/pricing'
     | '/signup'
+    | '/admin/incidents'
+    | '/admin/integrations'
     | '/admin/overview'
     | '/admin/providers'
+    | '/admin/scenarios'
     | '/admin/tenants'
+    | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
     | '/app/integrations'
@@ -286,9 +326,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/pricing'
     | '/signup'
+    | '/admin/incidents'
+    | '/admin/integrations'
     | '/admin/overview'
     | '/admin/providers'
+    | '/admin/scenarios'
     | '/admin/tenants'
+    | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
     | '/app/integrations'
@@ -314,9 +358,13 @@ export interface FileRouteTypes {
     | '/login'
     | '/pricing'
     | '/signup'
+    | '/admin/incidents'
+    | '/admin/integrations'
     | '/admin/overview'
     | '/admin/providers'
+    | '/admin/scenarios'
     | '/admin/tenants'
+    | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
     | '/app/integrations'
@@ -480,11 +528,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppApiKeysRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/transactions': {
+      id: '/admin/transactions'
+      path: '/transactions'
+      fullPath: '/admin/transactions'
+      preLoaderRoute: typeof AdminTransactionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/tenants': {
       id: '/admin/tenants'
       path: '/tenants'
       fullPath: '/admin/tenants'
       preLoaderRoute: typeof AdminTenantsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/scenarios': {
+      id: '/admin/scenarios'
+      path: '/scenarios'
+      fullPath: '/admin/scenarios'
+      preLoaderRoute: typeof AdminScenariosRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/providers': {
@@ -499,6 +561,20 @@ declare module '@tanstack/react-router' {
       path: '/overview'
       fullPath: '/admin/overview'
       preLoaderRoute: typeof AdminOverviewRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/integrations': {
+      id: '/admin/integrations'
+      path: '/integrations'
+      fullPath: '/admin/integrations'
+      preLoaderRoute: typeof AdminIntegrationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/incidents': {
+      id: '/admin/incidents'
+      path: '/incidents'
+      fullPath: '/admin/incidents'
+      preLoaderRoute: typeof AdminIncidentsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/app/transaction/$id': {
@@ -545,16 +621,24 @@ const AdminTenantsRouteWithChildren = AdminTenantsRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminIncidentsRoute: typeof AdminIncidentsRoute
+  AdminIntegrationsRoute: typeof AdminIntegrationsRoute
   AdminOverviewRoute: typeof AdminOverviewRoute
   AdminProvidersRoute: typeof AdminProvidersRoute
+  AdminScenariosRoute: typeof AdminScenariosRoute
   AdminTenantsRoute: typeof AdminTenantsRouteWithChildren
+  AdminTransactionsRoute: typeof AdminTransactionsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminIncidentsRoute: AdminIncidentsRoute,
+  AdminIntegrationsRoute: AdminIntegrationsRoute,
   AdminOverviewRoute: AdminOverviewRoute,
   AdminProvidersRoute: AdminProvidersRoute,
+  AdminScenariosRoute: AdminScenariosRoute,
   AdminTenantsRoute: AdminTenantsRouteWithChildren,
+  AdminTransactionsRoute: AdminTransactionsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
