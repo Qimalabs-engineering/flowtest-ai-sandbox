@@ -208,10 +208,10 @@ function Landing() {
       {/* Problem */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="max-w-2xl">
+          <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">The problem</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Production becomes your real test environment.</h2>
-            <p className="mt-3 text-muted-foreground">Then every failure becomes a 2am incident channel.</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Production becomes your real test environment.</h2>
+            <p className="mt-4 text-muted-foreground">Then every failure becomes a 2am incident channel.</p>
           </div>
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {problems.map((p) => (
