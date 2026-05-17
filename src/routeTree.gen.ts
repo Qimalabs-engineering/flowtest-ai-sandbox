@@ -19,7 +19,7 @@ import { Route as AppScenariosRouteImport } from './routes/app.scenarios'
 import { Route as AppProvidersRouteImport } from './routes/app.providers'
 import { Route as AppAssistantRouteImport } from './routes/app.assistant'
 import { Route as AppApiKeysRouteImport } from './routes/app.api-keys'
-import { Route as AppTransactionsIdRouteImport } from './routes/app.transactions.$id'
+import { Route as AppTransactionIdRouteImport } from './routes/app.transaction.$id'
 
 const AppRoute = AppRouteImport.update({
   id: '/app',
@@ -71,10 +71,10 @@ const AppApiKeysRoute = AppApiKeysRouteImport.update({
   path: '/api-keys',
   getParentRoute: () => AppRoute,
 } as any)
-const AppTransactionsIdRoute = AppTransactionsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AppTransactionsRoute,
+const AppTransactionIdRoute = AppTransactionIdRouteImport.update({
+  id: '/transaction/$id',
+  path: '/transaction/$id',
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -85,10 +85,10 @@ export interface FileRoutesByFullPath {
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
-  '/app/transactions': typeof AppTransactionsRouteWithChildren
+  '/app/transactions': typeof AppTransactionsRoute
   '/app/webhooks': typeof AppWebhooksRoute
   '/app/': typeof AppIndexRoute
-  '/app/transactions/$id': typeof AppTransactionsIdRoute
+  '/app/transaction/$id': typeof AppTransactionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -97,10 +97,10 @@ export interface FileRoutesByTo {
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
-  '/app/transactions': typeof AppTransactionsRouteWithChildren
+  '/app/transactions': typeof AppTransactionsRoute
   '/app/webhooks': typeof AppWebhooksRoute
   '/app': typeof AppIndexRoute
-  '/app/transactions/$id': typeof AppTransactionsIdRoute
+  '/app/transaction/$id': typeof AppTransactionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -111,10 +111,10 @@ export interface FileRoutesById {
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
-  '/app/transactions': typeof AppTransactionsRouteWithChildren
+  '/app/transactions': typeof AppTransactionsRoute
   '/app/webhooks': typeof AppWebhooksRoute
   '/app/': typeof AppIndexRoute
-  '/app/transactions/$id': typeof AppTransactionsIdRoute
+  '/app/transaction/$id': typeof AppTransactionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -129,7 +129,7 @@ export interface FileRouteTypes {
     | '/app/transactions'
     | '/app/webhooks'
     | '/app/'
-    | '/app/transactions/$id'
+    | '/app/transaction/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -141,7 +141,7 @@ export interface FileRouteTypes {
     | '/app/transactions'
     | '/app/webhooks'
     | '/app'
-    | '/app/transactions/$id'
+    | '/app/transaction/$id'
   id:
     | '__root__'
     | '/'
@@ -154,7 +154,7 @@ export interface FileRouteTypes {
     | '/app/transactions'
     | '/app/webhooks'
     | '/app/'
-    | '/app/transactions/$id'
+    | '/app/transaction/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -234,27 +234,15 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppApiKeysRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/transactions/$id': {
-      id: '/app/transactions/$id'
-      path: '/$id'
-      fullPath: '/app/transactions/$id'
-      preLoaderRoute: typeof AppTransactionsIdRouteImport
-      parentRoute: typeof AppTransactionsRoute
+    '/app/transaction/$id': {
+      id: '/app/transaction/$id'
+      path: '/transaction/$id'
+      fullPath: '/app/transaction/$id'
+      preLoaderRoute: typeof AppTransactionIdRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
-
-interface AppTransactionsRouteChildren {
-  AppTransactionsIdRoute: typeof AppTransactionsIdRoute
-}
-
-const AppTransactionsRouteChildren: AppTransactionsRouteChildren = {
-  AppTransactionsIdRoute: AppTransactionsIdRoute,
-}
-
-const AppTransactionsRouteWithChildren = AppTransactionsRoute._addFileChildren(
-  AppTransactionsRouteChildren,
-)
 
 interface AppRouteChildren {
   AppApiKeysRoute: typeof AppApiKeysRoute
@@ -262,9 +250,10 @@ interface AppRouteChildren {
   AppProvidersRoute: typeof AppProvidersRoute
   AppScenariosRoute: typeof AppScenariosRoute
   AppSettingsRoute: typeof AppSettingsRoute
-  AppTransactionsRoute: typeof AppTransactionsRouteWithChildren
+  AppTransactionsRoute: typeof AppTransactionsRoute
   AppWebhooksRoute: typeof AppWebhooksRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppTransactionIdRoute: typeof AppTransactionIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -273,9 +262,10 @@ const AppRouteChildren: AppRouteChildren = {
   AppProvidersRoute: AppProvidersRoute,
   AppScenariosRoute: AppScenariosRoute,
   AppSettingsRoute: AppSettingsRoute,
-  AppTransactionsRoute: AppTransactionsRouteWithChildren,
+  AppTransactionsRoute: AppTransactionsRoute,
   AppWebhooksRoute: AppWebhooksRoute,
   AppIndexRoute: AppIndexRoute,
+  AppTransactionIdRoute: AppTransactionIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -287,3 +277,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

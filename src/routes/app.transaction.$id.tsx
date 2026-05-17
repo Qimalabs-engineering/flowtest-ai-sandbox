@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { transactions } from "@/lib/mock-data";
 import { StatusBadge } from "@/components/status-badge";
 
-export const Route = createFileRoute("/app/transactions/$id")({
+export const Route = createFileRoute("/app/transaction/$id")({
   component: TxDetail,
   notFoundComponent: () => (
     <div className="p-8 text-center text-sm text-muted-foreground">Transaction not found.</div>
