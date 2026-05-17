@@ -44,8 +44,8 @@ const secondary = [
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isActive = (url: string, exact?: boolean) =>
-    exact ? pathname === url : pathname === url || pathname.startsWith(url + "/");
+  const isActive = (url: string) =>
+    pathname === url || pathname.startsWith(url + "/");
 
   return (
     <Sidebar collapsible="icon">
@@ -67,7 +67,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url, item.exact)} tooltip={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
                     <Link to={item.url}>
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
