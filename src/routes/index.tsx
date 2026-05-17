@@ -395,10 +395,10 @@ function Landing() {
       {/* How it works */}
       <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="max-w-2xl">
+          <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Workflow</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">How it works</h2>
-            <p className="mt-3 text-muted-foreground">Five steps from your first simulated transaction to closed ticket.</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">How it works</h2>
+            <p className="mt-4 text-muted-foreground">Five steps from your first simulated transaction to closed ticket.</p>
           </div>
 
           <div className="relative mt-14">
