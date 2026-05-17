@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FlowDesigner } from "@/components/flow-designer";
-import { getFlowDefinition, stateLabel } from "@/lib/flow-data";
+import { getFlowDefinition, stateLabel, type FlowDefinition } from "@/lib/flow-data";
 
 export const Route = createFileRoute("/app/flows/$id")({
   loader: ({ params }) => {
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/app/flows/$id")({
 });
 
 function FlowDetail() {
-  const { def } = Route.useLoaderData();
+  const { def } = Route.useLoaderData() as { def: FlowDefinition };
   const [scenarioId, setScenarioId] = useState<string>("none");
 
   const activeScenario = def.failureScenarios.find((s) => s.id === scenarioId);
