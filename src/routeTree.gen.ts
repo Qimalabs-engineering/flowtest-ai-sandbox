@@ -41,6 +41,7 @@ import { Route as AdminIntegrationsRouteImport } from './routes/admin.integratio
 import { Route as AdminIncidentsRouteImport } from './routes/admin.incidents'
 import { Route as AdminFeatureFlagsRouteImport } from './routes/admin.feature-flags'
 import { Route as AdminAuditLogsRouteImport } from './routes/admin.audit-logs'
+import { Route as AppFlowsIndexRouteImport } from './routes/app.flows.index'
 import { Route as AppTransactionIdRouteImport } from './routes/app.transaction.$id'
 import { Route as AppIntegrationsIdRouteImport } from './routes/app.integrations.$id'
 import { Route as AppIncidentIdRouteImport } from './routes/app.incident.$id'
@@ -207,6 +208,11 @@ const AdminAuditLogsRoute = AdminAuditLogsRouteImport.update({
   path: '/audit-logs',
   getParentRoute: () => AdminRoute,
 } as any)
+const AppFlowsIndexRoute = AppFlowsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppFlowsRoute,
+} as any)
 const AppTransactionIdRoute = AppTransactionIdRouteImport.update({
   id: '/transaction/$id',
   path: '/transaction/$id',
@@ -271,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/app/incident/$id': typeof AppIncidentIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
+  '/app/flows/': typeof AppFlowsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -292,7 +299,6 @@ export interface FileRoutesByTo {
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
   '/app/failures': typeof AppFailuresRoute
-  '/app/flows': typeof AppFlowsRouteWithChildren
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/overview': typeof AppOverviewRoute
@@ -308,6 +314,7 @@ export interface FileRoutesByTo {
   '/app/incident/$id': typeof AppIncidentIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
+  '/app/flows': typeof AppFlowsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -348,6 +355,7 @@ export interface FileRoutesById {
   '/app/incident/$id': typeof AppIncidentIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
+  '/app/flows/': typeof AppFlowsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -389,6 +397,7 @@ export interface FileRouteTypes {
     | '/app/incident/$id'
     | '/app/integrations/$id'
     | '/app/transaction/$id'
+    | '/app/flows/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -410,7 +419,6 @@ export interface FileRouteTypes {
     | '/app/api-keys'
     | '/app/assistant'
     | '/app/failures'
-    | '/app/flows'
     | '/app/integrations'
     | '/app/ops-brain'
     | '/app/overview'
@@ -426,6 +434,7 @@ export interface FileRouteTypes {
     | '/app/incident/$id'
     | '/app/integrations/$id'
     | '/app/transaction/$id'
+    | '/app/flows'
   id:
     | '__root__'
     | '/'
@@ -465,6 +474,7 @@ export interface FileRouteTypes {
     | '/app/incident/$id'
     | '/app/integrations/$id'
     | '/app/transaction/$id'
+    | '/app/flows/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -703,6 +713,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuditLogsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/app/flows/': {
+      id: '/app/flows/'
+      path: '/'
+      fullPath: '/app/flows/'
+      preLoaderRoute: typeof AppFlowsIndexRouteImport
+      parentRoute: typeof AppFlowsRoute
+    }
     '/app/transaction/$id': {
       id: '/app/transaction/$id'
       path: '/transaction/$id'
@@ -787,10 +804,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AppFlowsRouteChildren {
   AppFlowsIdRoute: typeof AppFlowsIdRoute
+  AppFlowsIndexRoute: typeof AppFlowsIndexRoute
 }
 
 const AppFlowsRouteChildren: AppFlowsRouteChildren = {
   AppFlowsIdRoute: AppFlowsIdRoute,
+  AppFlowsIndexRoute: AppFlowsIndexRoute,
 }
 
 const AppFlowsRouteWithChildren = AppFlowsRoute._addFileChildren(
@@ -859,3 +878,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
