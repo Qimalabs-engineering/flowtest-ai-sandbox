@@ -100,67 +100,80 @@ function Landing() {
     <div className="min-h-screen bg-background text-foreground">
       <MarketingHeader />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b">
+      {/* Hero — dark cinematic */}
+      <section className="relative overflow-hidden border-b bg-[oklch(0.16_0.025_260)] text-white">
         {/* Grid background */}
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 opacity-[0.35] [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]"
+          className="absolute inset-0 -z-10 opacity-[0.18] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]"
           style={{
             backgroundImage:
-              "linear-gradient(to right, color-mix(in oklab, var(--foreground) 8%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 8%, transparent) 1px, transparent 1px)",
-            backgroundSize: "44px 44px",
+              "linear-gradient(to right, rgba(255,255,255,0.18) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.18) 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
           }}
         />
-        {/* Glow */}
-        <div aria-hidden className="absolute left-1/2 top-[-10%] -z-10 h-[520px] w-[1100px] -translate-x-1/2 rounded-[100%] bg-primary/20 blur-[120px]" />
-        <div aria-hidden className="absolute right-[-10%] top-[20%] -z-10 h-[320px] w-[520px] rounded-full bg-info/15 blur-[120px]" />
+        {/* Ambient glows */}
+        <div aria-hidden className="absolute left-1/2 top-[-20%] -z-10 h-[640px] w-[1200px] -translate-x-1/2 rounded-[100%] bg-primary/35 blur-[140px]" />
+        <div aria-hidden className="absolute left-[10%] bottom-[-10%] -z-10 h-[360px] w-[520px] rounded-full bg-info/25 blur-[140px]" />
+        <div aria-hidden className="absolute right-[5%] top-[15%] -z-10 h-[300px] w-[460px] rounded-full bg-primary/25 blur-[120px]" />
+        {/* Soft vignette */}
+        <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-b from-transparent to-black/40" />
 
-        <div className="mx-auto max-w-6xl px-4 py-20 md:py-28 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border bg-card/70 px-3 py-1 text-xs font-medium backdrop-blur animate-fade-in">
+        <div className="mx-auto flex max-w-6xl flex-col items-center px-4 pt-24 pb-20 text-center md:pt-32 md:pb-28">
+          <div className="fs-fade-in inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur">
             <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/60" />
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/70" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
-            <span className="text-muted-foreground">Now with</span>
-            <span className="font-semibold">Ops Brain</span>
-            <span className="text-muted-foreground">— AI incident copilot</span>
+            <span className="text-white/60">Now with</span>
+            <span className="font-semibold text-white">Ops Brain</span>
+            <span className="text-white/60">— AI incident copilot</span>
           </div>
 
-          <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl">
-            Test fintech integrations{" "}
-            <span className="bg-gradient-to-br from-primary via-info to-primary bg-clip-text text-transparent">
-              before they break
-            </span>{" "}
-            in production.
+          <h1 className="fs-fade-up mx-auto mt-7 max-w-5xl text-balance text-5xl font-semibold leading-[1.02] tracking-tight md:text-7xl lg:text-[5.25rem]">
+            Test fintech integrations
+            <span className="mt-2 block bg-gradient-to-br from-primary via-info to-primary bg-clip-text pb-1 text-transparent">
+              before they break in production.
+            </span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">
-            FlowSim gives fintech teams a programmable sandbox, real-world failure simulation, and an AI incident copilot for payments, banking, webhooks, and transaction operations.
+
+          <p className="fs-fade-up mx-auto mt-7 max-w-2xl text-pretty text-base text-white/65 md:text-lg" style={{ animationDelay: "80ms" }}>
+            FlowSim is a programmable sandbox for banks, payments, mobile money, and webhooks — plus an AI copilot that investigates failures using your logs, code, and Slack threads.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button asChild size="lg" className="shadow-xl shadow-primary/25 hover:-translate-y-0.5 transition-transform">
+
+          <div className="fs-fade-up mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm text-white/70" style={{ animationDelay: "140ms" }}>
+            <span className="inline-flex items-center gap-1.5"><Brain className="h-4 w-4 text-primary" /> AI-powered investigation</span>
+            <span className="inline-flex items-center gap-1.5"><Webhook className="h-4 w-4 text-info" /> Realistic failure simulation</span>
+            <span className="inline-flex items-center gap-1.5"><Zap className="h-4 w-4 text-warning" /> Setup in 5 minutes</span>
+          </div>
+
+          <div className="fs-fade-up mt-9 flex flex-wrap justify-center gap-3" style={{ animationDelay: "200ms" }}>
+            <Button asChild size="lg" className="h-12 px-6 text-sm shadow-2xl shadow-primary/40 hover:-translate-y-0.5 transition-transform">
               <Link to="/signup">Start testing free <ArrowRight className="ml-1.5 h-4 w-4" /></Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="backdrop-blur bg-card/60">
+            <Button asChild size="lg" variant="outline" className="h-12 border-white/20 bg-white/[0.04] px-6 text-sm text-white hover:bg-white/10 hover:text-white backdrop-blur">
               <Link to="/app/overview">View live demo</Link>
             </Button>
           </div>
 
-          <div className="mx-auto mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
+          <div className="fs-fade-up mx-auto mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-white/50" style={{ animationDelay: "240ms" }}>
             <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-success" /> No real funds, ever</span>
-            <span className="inline-flex items-center gap-1.5"><Zap className="h-3.5 w-3.5 text-warning" /> Setup in under 5 min</span>
-            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-primary" /> No credit card required</span>
+            <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-white/70" /> No credit card required</span>
+            <span className="inline-flex items-center gap-1.5"><GitBranch className="h-3.5 w-3.5 text-info" /> SOC 2 ready</span>
           </div>
 
-          {/* Code mockup */}
-          <div className="relative mx-auto mt-16 max-w-4xl">
-            <div aria-hidden className="absolute -inset-2 rounded-2xl bg-gradient-to-r from-primary/30 via-info/20 to-primary/30 opacity-60 blur-2xl" />
-            <div className="relative overflow-hidden rounded-xl border bg-[oklch(0.18_0.025_260)] text-left shadow-2xl">
+          {/* Terminal mockup */}
+          <div className="fs-fade-up relative mx-auto mt-16 w-full max-w-4xl" style={{ animationDelay: "320ms" }}>
+            <div aria-hidden className="absolute -inset-3 rounded-3xl bg-gradient-to-r from-primary/40 via-info/30 to-primary/40 opacity-70 blur-2xl" />
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[oklch(0.13_0.02_260)] text-left shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]">
               <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.65_0.22_25)]/60" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.78_0.16_75)]/60" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.7_0.17_155)]/60" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.65_0.22_25)]/70" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.78_0.16_75)]/70" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.7_0.17_155)]/70" />
                 <span className="ml-3 font-mono text-[11px] text-white/40">~/flowsim · sandbox.sh</span>
+                <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-medium text-white/60">
+                  <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" /> live
+                </span>
               </div>
               <pre className="overflow-x-auto p-5 font-mono text-[12.5px] leading-relaxed text-white/80 md:text-sm">
 {`$ `}<span className="text-[oklch(0.75_0.16_75)]">curl</span>{` -X POST https://api.flowsim.dev/v1/transfers \\
@@ -168,20 +181,25 @@ function Landing() {
   -d `}<span className="text-[oklch(0.7_0.17_155)]">{`'{"provider":"mpesa_sim","amount":2500,"scenario":"timeout_30s"}'`}</span>{`
 
 `}<span className="text-[oklch(0.78_0.16_75)]">→ 504 Gateway Timeout</span>{`  · scenario matched: Timeout after 30 seconds
-`}<span className="text-[oklch(0.7_0.17_230)]">→ Ops Brain</span>{` opened `}<span className="text-white">INC-2418</span>{` · evidence: 2 logs, 1 commit, 1 alert`}
+`}<span className="text-[oklch(0.7_0.17_230)]">→ Ops Brain</span>{` opened `}<span className="text-white">INC-2418</span>{` · evidence: 2 logs, 1 commit, 1 alert
+`}<span className="text-[oklch(0.7_0.17_155)]">✓ root cause</span>{` proposed in `}<span className="text-white">42s</span>{` · confidence 94%`}
               </pre>
             </div>
           </div>
+        </div>
 
-          {/* Logo strip */}
-          <div className="mt-16">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              Built to simulate the rails fintech teams rely on
-            </p>
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-sm font-semibold text-muted-foreground/70">
-              {["Stripe", "M-Pesa", "Paystack", "Flutterwave", "Plaid", "Adyen", "Mambu"].map((n) => (
-                <span key={n} className="opacity-80 hover:opacity-100 transition-opacity">{n}</span>
-              ))}
+        {/* Logo marquee strip */}
+        <div className="relative border-t border-white/10 bg-black/20 py-8">
+          <p className="text-center text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40">
+            Simulates the rails fintech teams rely on
+          </p>
+          <div className="fs-marquee-mask mt-5 overflow-hidden">
+            <div className="fs-marquee-track flex w-max items-center gap-14 pr-14 text-base font-semibold text-white/55">
+              {[...Array(2)].flatMap((_, i) =>
+                ["Stripe", "M-Pesa", "Paystack", "Flutterwave", "Plaid", "Adyen", "Mambu", "Wise", "Mono", "Paga", "Bank NG", "PayPal"].map((n) => (
+                  <span key={`${i}-${n}`} className="whitespace-nowrap tracking-tight hover:text-white transition-colors">{n}</span>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -190,10 +208,10 @@ function Landing() {
       {/* Problem */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="max-w-2xl">
+          <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">The problem</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Production becomes your real test environment.</h2>
-            <p className="mt-3 text-muted-foreground">Then every failure becomes a 2am incident channel.</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Production becomes your real test environment.</h2>
+            <p className="mt-4 text-muted-foreground">Then every failure becomes a 2am incident channel.</p>
           </div>
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {problems.map((p) => (
@@ -377,10 +395,10 @@ function Landing() {
       {/* How it works */}
       <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="max-w-2xl">
+          <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Workflow</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">How it works</h2>
-            <p className="mt-3 text-muted-foreground">Five steps from your first simulated transaction to closed ticket.</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">How it works</h2>
+            <p className="mt-4 text-muted-foreground">Five steps from your first simulated transaction to closed ticket.</p>
           </div>
 
           <div className="relative mt-14">
@@ -403,13 +421,13 @@ function Landing() {
       {/* Integrations */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Integrations</p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Plugs into the tools you already use</h2>
-              <p className="mt-3 text-muted-foreground">Bring your observability, code, and ops stack into every incident.</p>
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Integrations</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Plugs into the tools you already use</h2>
+            <p className="mt-4 text-muted-foreground">Bring your observability, code, and ops stack into every incident.</p>
+            <div className="mt-6 flex justify-center">
+              <Button asChild variant="outline" size="sm"><Link to="/app/integrations">Browse all <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
             </div>
-            <Button asChild variant="ghost" className="hidden md:inline-flex"><Link to="/app/integrations">Browse all <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
           </div>
           <div className="mt-10 grid gap-3 md:grid-cols-3 lg:grid-cols-4">
             {integrations.map((i) => (
@@ -430,9 +448,10 @@ function Landing() {
       {/* Use cases */}
       <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="max-w-2xl">
+          <div className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Use cases</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">What teams ship with FlowSim</h2>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">What teams ship with FlowSim</h2>
+            <p className="mt-4 text-muted-foreground">From first integration to post-incident review.</p>
           </div>
           <div className="mt-10 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {useCases.map((u) => (
