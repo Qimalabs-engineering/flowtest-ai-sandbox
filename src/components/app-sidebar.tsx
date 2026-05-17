@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const items = [
-  { title: "Overview", url: "/app", icon: LayoutDashboard, exact: true },
+  { title: "Overview", url: "/app/overview", icon: LayoutDashboard },
   { title: "Providers", url: "/app/providers", icon: Server },
   { title: "Scenarios", url: "/app/scenarios", icon: Workflow },
   { title: "Transactions", url: "/app/transactions", icon: ArrowLeftRight },
@@ -50,7 +50,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <Link to="/app" className="flex items-center gap-2 px-2 py-1.5">
+        <Link to="/app/overview" className="flex items-center gap-2 px-2 py-1.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <Waves className="h-4 w-4" />
           </div>
