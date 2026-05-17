@@ -9,6 +9,8 @@ import {
   KeyRound,
   Settings,
   Waves,
+  Plug,
+  Brain,
 } from "lucide-react";
 
 import {
@@ -30,6 +32,8 @@ const items = [
   { title: "Scenarios", url: "/app/scenarios", icon: Workflow },
   { title: "Transactions", url: "/app/transactions", icon: ArrowLeftRight },
   { title: "Webhooks", url: "/app/webhooks", icon: Webhook },
+  { title: "Ops Brain", url: "/app/ops-brain", icon: Brain },
+  { title: "Integrations", url: "/app/integrations", icon: Plug },
   { title: "AI Assistant", url: "/app/assistant", icon: Sparkles },
 ];
 
