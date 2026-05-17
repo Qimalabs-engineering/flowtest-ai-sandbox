@@ -1,4 +1,6 @@
-import { Bell, Search, Info } from "lucide-react";
+import { Bell, Search, Info, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   Tooltip,
   TooltipContent,
@@ -25,7 +27,26 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
+const envLabels: Record<string, string> = {
+  "test-sandbox": "Test Sandbox",
+  "staging-mirror": "Staging Mirror",
+  "production-replay": "Production Replay",
+};
+
 export function AppTopbar() {
+  const [env, setEnv] = useState("test-sandbox");
+  const [switching, setSwitching] = useState<string | null>(null);
+
+  const handleEnvChange = (next: string) => {
+    if (next === env) return;
+    setSwitching(next);
+    window.setTimeout(() => {
+      setEnv(next);
+      setSwitching(null);
+      toast.success(`Switched to ${envLabels[next]}`);
+    }, 650);
+  };
+
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur md:px-4">
       <SidebarTrigger />
@@ -34,7 +55,13 @@ export function AppTopbar() {
         <Input placeholder="Search transactions, providers, events…" className="pl-8 h-9" />
       </div>
       <div className="ml-auto flex items-center gap-2">
-        <Select defaultValue="test-sandbox">
+        {switching && (
+          <div className="hidden md:flex items-center gap-1.5 rounded-full border bg-card/70 px-2.5 py-1 text-xs text-muted-foreground fs-fade-in">
+            <Loader2 className="h-3 w-3 animate-spin text-primary" />
+            <span>Switching to {envLabels[switching]}…</span>
+          </div>
+        )}
+        <Select value={env} onValueChange={handleEnvChange}>
           <SelectTrigger className="h-9 w-[180px]">
             <SelectValue placeholder="Environment" />
           </SelectTrigger>
@@ -73,7 +100,9 @@ export function AppTopbar() {
         </TooltipProvider>
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-4 w-4" />
-          <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-destructive" />
+          <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-destructive">
+            <span className="absolute inset-0 rounded-full bg-destructive animate-ping opacity-75" />
+          </span>
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
