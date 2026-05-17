@@ -17,6 +17,7 @@ import { Route as AppTransactionsRouteImport } from './routes/app.transactions'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppScenariosRouteImport } from './routes/app.scenarios'
 import { Route as AppProvidersRouteImport } from './routes/app.providers'
+import { Route as AppOverviewRouteImport } from './routes/app.overview'
 import { Route as AppOpsBrainRouteImport } from './routes/app.ops-brain'
 import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
 import { Route as AppAssistantRouteImport } from './routes/app.assistant'
@@ -65,6 +66,11 @@ const AppProvidersRoute = AppProvidersRouteImport.update({
   path: '/providers',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOverviewRoute = AppOverviewRouteImport.update({
+  id: '/overview',
+  path: '/overview',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppOpsBrainRoute = AppOpsBrainRouteImport.update({
   id: '/ops-brain',
   path: '/ops-brain',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/app/assistant': typeof AppAssistantRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
+  '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/app/assistant': typeof AppAssistantRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
+  '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/app/assistant': typeof AppAssistantRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
+  '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/app/assistant'
     | '/app/integrations'
     | '/app/ops-brain'
+    | '/app/overview'
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/app/assistant'
     | '/app/integrations'
     | '/app/ops-brain'
+    | '/app/overview'
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
@@ -194,6 +205,7 @@ export interface FileRouteTypes {
     | '/app/assistant'
     | '/app/integrations'
     | '/app/ops-brain'
+    | '/app/overview'
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
@@ -268,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProvidersRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/overview': {
+      id: '/app/overview'
+      path: '/overview'
+      fullPath: '/app/overview'
+      preLoaderRoute: typeof AppOverviewRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/ops-brain': {
       id: '/app/ops-brain'
       path: '/ops-brain'
@@ -337,6 +356,7 @@ interface AppRouteChildren {
   AppAssistantRoute: typeof AppAssistantRoute
   AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
   AppOpsBrainRoute: typeof AppOpsBrainRoute
+  AppOverviewRoute: typeof AppOverviewRoute
   AppProvidersRoute: typeof AppProvidersRoute
   AppScenariosRoute: typeof AppScenariosRoute
   AppSettingsRoute: typeof AppSettingsRoute
@@ -352,6 +372,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAssistantRoute: AppAssistantRoute,
   AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
   AppOpsBrainRoute: AppOpsBrainRoute,
+  AppOverviewRoute: AppOverviewRoute,
   AppProvidersRoute: AppProvidersRoute,
   AppScenariosRoute: AppScenariosRoute,
   AppSettingsRoute: AppSettingsRoute,
@@ -371,3 +392,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
