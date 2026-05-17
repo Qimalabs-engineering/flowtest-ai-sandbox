@@ -16,6 +16,9 @@ import {
 import { StatusBadge } from "@/components/status-badge";
 import { incidents, opsSummary, type Severity } from "@/lib/ops-data";
 import { cn } from "@/lib/utils";
+import { failureClusters, getFlowDefinition, findScenario, stateLabel, flowInstances } from "@/lib/flow-data";
+import { FlowDesigner } from "@/components/flow-designer";
+import { PlayCircle, Wrench, ExternalLink, AlertTriangle as AlertTri } from "lucide-react";
 
 export const Route = createFileRoute("/app/ops-brain")({
   component: OpsBrainPage,
