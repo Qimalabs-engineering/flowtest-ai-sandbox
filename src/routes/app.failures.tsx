@@ -77,7 +77,7 @@ function FailuresPage() {
                       </span>
                       <div className="flex gap-2">
                         <Button asChild size="sm" variant="outline">
-                          <Link to="/app/flows/$id" params={{ id: def.id }} search={{ scenario: c.scenarioId } as never}>
+                          <Link to="/app/flows/$id" params={{ id: def.id }}>
                             <Eye className="h-3.5 w-3.5 mr-1" /> Preview
                           </Link>
                         </Button>
