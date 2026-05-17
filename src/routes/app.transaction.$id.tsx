@@ -1,9 +1,19 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, Check } from "lucide-react";
+import { useState } from "react";
+import { ArrowLeft, Check, PlayCircle, X, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { transactions } from "@/lib/mock-data";
 import { StatusBadge } from "@/components/status-badge";
+import { FailureBadge } from "@/components/failure-badge";
+import { FourQuestionsPanel } from "@/components/four-questions-panel";
+import { FlowDesigner } from "@/components/flow-designer";
+import { FlowReplay } from "@/components/flow-replay";
+import {
+  getInstanceByTxId,
+  getFlowDefinition,
+  type FlowInstance,
+} from "@/lib/flow-data";
 
 export const Route = createFileRoute("/app/transaction/$id")({
   component: TxDetail,
@@ -19,6 +29,9 @@ export const Route = createFileRoute("/app/transaction/$id")({
 
 function TxDetail() {
   const { tx } = Route.useLoaderData();
+  const instance: FlowInstance | undefined = getInstanceByTxId(tx.id);
+  const def = instance ? getFlowDefinition(instance.flowDefinitionId) : undefined;
+  const [replayOpen, setReplayOpen] = useState(false);
 
   const timeline = [
     { label: "API request received", time: "00:00.012", done: true },
@@ -35,11 +48,60 @@ function TxDetail() {
         <Button asChild variant="ghost" size="sm" className="mb-2 -ml-2">
           <Link to="/app/transactions"><ArrowLeft className="h-4 w-4 mr-1" /> Back to transactions</Link>
         </Button>
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-semibold tracking-tight font-mono">{tx.reference}</h1>
-          <StatusBadge status={tx.status} />
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-2xl font-semibold tracking-tight font-mono">{tx.reference}</h1>
+            {instance?.failurePoint ? (
+              <FailureBadge instance={instance} />
+            ) : (
+              <StatusBadge status={tx.status} />
+            )}
+            {def && (
+              <Link
+                to="/app/flows/$id"
+                params={{ id: def.id }}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                Flow: <span className="font-mono">{def.id}</span>
+              </Link>
+            )}
+          </div>
+          {instance && (
+            <Button onClick={() => setReplayOpen(true)} variant={instance.failurePoint ? "default" : "outline"}>
+              <PlayCircle className="h-4 w-4 mr-1.5" /> Replay
+            </Button>
+          )}
         </div>
       </div>
+
+      {instance?.failurePoint && (
+        <FourQuestionsPanel instance={instance} />
+      )}
+
+      {instance && def && (
+        <Card>
+          <CardHeader className="border-b py-3">
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle className="text-base">Where in the flow</CardTitle>
+              {instance.failurePoint && (
+                <span className="flex items-center gap-1 text-xs text-destructive">
+                  <AlertTriangle className="h-3.5 w-3.5" /> Failure highlighted
+                </span>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent className="p-4">
+            <FlowDesigner
+              definition={def}
+              traveledStates={instance.traveledStates}
+              failureStateId={instance.failurePoint?.atState}
+              failureTransitionEvent={instance.failurePoint?.atTransitionEvent}
+              showHappyPath
+              divergenceStateId={instance.traveledStates.find((s) => !def.happyPath.includes(s))}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
@@ -94,33 +156,37 @@ function TxDetail() {
           <CardContent>
             <pre className="overflow-x-auto rounded-md bg-muted p-3 text-xs font-mono leading-relaxed">{JSON.stringify({
               status: tx.status,
-              code: tx.status === "successful" ? "00" : tx.status === "failed" ? "51" : "09",
-              message: tx.status === "successful" ? "Approved" : tx.status === "failed" ? "Do not honor" : "Pending confirmation",
+              code: tx.status === "successful" ? "00" : (instance?.failurePoint?.providerCode ?? "51"),
+              message: tx.status === "successful" ? "Approved" : (instance?.failurePoint?.cause ?? "Pending confirmation"),
               reference: tx.reference,
             }, null, 2)}</pre>
           </CardContent>
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Webhook deliveries</CardTitle>
-          <CardDescription>Delivery attempts for this transaction.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="divide-y">
-            {[1, 2].map((i) => (
-              <li key={i} className="flex items-center justify-between py-3 text-sm">
-                <div>
-                  <p className="font-mono text-xs">evt_{tx.id}_{i}</p>
-                  <p className="text-xs text-muted-foreground">POST https://api.client.dev/webhooks/flowsim</p>
-                </div>
-                <StatusBadge status={i === 1 ? "delivered" : tx.status === "failed" ? "failed" : "delivered"} />
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
+      {/* Replay drawer */}
+      {replayOpen && instance && (
+        <div className="fixed inset-0 z-50 flex">
+          <div
+            className="absolute inset-0 bg-background/60 backdrop-blur-sm animate-in fade-in"
+            onClick={() => setReplayOpen(false)}
+          />
+          <div className="relative ml-auto h-full w-full max-w-5xl overflow-y-auto border-l bg-background shadow-2xl animate-in slide-in-from-right">
+            <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b bg-background/95 px-5 py-3 backdrop-blur">
+              <div>
+                <div className="text-xs font-mono text-muted-foreground">{tx.reference}</div>
+                <div className="text-base font-semibold">Replay flow execution</div>
+              </div>
+              <Button size="icon" variant="ghost" onClick={() => setReplayOpen(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="p-5">
+              <FlowReplay instance={instance} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
