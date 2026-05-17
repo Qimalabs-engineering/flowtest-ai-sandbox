@@ -79,7 +79,7 @@ function TransactionsPage() {
                   <TableCell className="text-muted-foreground text-xs">{new Date(t.createdAt).toLocaleString()}</TableCell>
                   <TableCell className="text-right">
                     <Button asChild variant="ghost" size="sm">
-                      <Link to="/app/transactions/$id" params={{ id: t.id }}>
+                      <Link to="/app/transaction/$id" params={{ id: t.id }}>
                         <Eye className="h-3.5 w-3.5 mr-1" /> View
                       </Link>
                     </Button>
