@@ -38,6 +38,7 @@ import {
 } from "recharts";
 import { transactions, failureTrend, topFailing } from "@/lib/mock-data";
 import { incidents, opsSummary } from "@/lib/ops-data";
+import { failureClusters, getFlowDefinition, findScenario, stateLabel } from "@/lib/flow-data";
 import { StatusBadge } from "@/components/status-badge";
 import { Brain, Plug, Ticket, AlertTriangle } from "lucide-react";
 
@@ -144,6 +145,8 @@ function Overview() {
         </Card>
       </div>
 
+      <TopFailurePoints />
+
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {opsStats.map((s) => (
           <Card key={s.label}>
@@ -232,5 +235,50 @@ function Overview() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function TopFailurePoints() {
+  const clusters = failureClusters().slice(0, 5);
+  if (clusters.length === 0) return null;
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between gap-2">
+        <div>
+          <CardTitle className="text-base flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4 text-destructive" /> Top failure points
+          </CardTitle>
+          <CardDescription className="text-xs">Where your flows are breaking, ranked by volume.</CardDescription>
+        </div>
+        <Button asChild size="sm" variant="outline"><Link to="/app/failures">View all</Link></Button>
+      </CardHeader>
+      <CardContent className="p-0">
+        <ul className="divide-y text-sm">
+          {clusters.map((c, i) => {
+            const def = getFlowDefinition(c.flowDefinitionId);
+            const scenario = def ? findScenario(def, c.scenarioId) : undefined;
+            if (!def || !scenario) return null;
+            return (
+              <li key={i} className="flex items-center justify-between gap-3 px-4 py-2.5">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span className="rounded-full bg-destructive/15 px-2 py-0.5 font-mono text-xs font-semibold text-destructive shrink-0">
+                    {c.count}×
+                  </span>
+                  <div className="min-w-0">
+                    <div className="font-medium truncate">{scenario.name}</div>
+                    <div className="text-xs text-muted-foreground truncate">
+                      {def.name} · at <span className="font-mono">{stateLabel(def, c.atState)}</span> · {scenario.providerCode}
+                    </div>
+                  </div>
+                </div>
+                <Button asChild size="sm" variant="ghost">
+                  <Link to="/app/flows/$id" params={{ id: def.id }}>Open flow →</Link>
+                </Button>
+              </li>
+            );
+          })}
+        </ul>
+      </CardContent>
+    </Card>
   );
 }

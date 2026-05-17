@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/table";
 import { transactions } from "@/lib/mock-data";
 import { StatusBadge } from "@/components/status-badge";
+import { FailureBadge } from "@/components/failure-badge";
+import { getInstanceByTxId } from "@/lib/flow-data";
 
 export const Route = createFileRoute("/app/transactions")({
   component: TransactionsPage,
@@ -68,13 +70,19 @@ function TransactionsPage() {
             <TableBody>
               {filtered.length === 0 ? (
                 <TableRow><TableCell colSpan={8} className="h-24 text-center text-sm text-muted-foreground">No transactions match your filters.</TableCell></TableRow>
-              ) : filtered.map((t) => (
+              ) : filtered.map((t) => {
+                const inst = getInstanceByTxId(t.id);
+                return (
                 <TableRow key={t.id}>
                   <TableCell className="font-mono text-xs">{t.reference}</TableCell>
                   <TableCell>{t.provider}</TableCell>
                   <TableCell className="font-medium">{t.amount.toLocaleString()}</TableCell>
                   <TableCell className="text-muted-foreground">{t.currency}</TableCell>
-                  <TableCell><StatusBadge status={t.status} /></TableCell>
+                  <TableCell>
+                    {inst?.failurePoint
+                      ? <FailureBadge instance={inst} />
+                      : <StatusBadge status={t.status} />}
+                  </TableCell>
                   <TableCell className="text-muted-foreground text-xs">{t.scenario}</TableCell>
                   <TableCell className="text-muted-foreground text-xs">{new Date(t.createdAt).toLocaleString()}</TableCell>
                   <TableCell className="text-right">
@@ -85,7 +93,7 @@ function TransactionsPage() {
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
+              );})}
             </TableBody>
           </Table>
         </CardContent>

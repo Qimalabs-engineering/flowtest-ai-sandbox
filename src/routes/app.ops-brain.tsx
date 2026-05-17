@@ -16,6 +16,9 @@ import {
 import { StatusBadge } from "@/components/status-badge";
 import { incidents, opsSummary, type Severity } from "@/lib/ops-data";
 import { cn } from "@/lib/utils";
+import { failureClusters, getFlowDefinition, findScenario, stateLabel, flowInstances } from "@/lib/flow-data";
+import { FlowDesigner } from "@/components/flow-designer";
+import { PlayCircle, Wrench, ExternalLink, AlertTriangle as AlertTri } from "lucide-react";
 
 export const Route = createFileRoute("/app/ops-brain")({
   component: OpsBrainPage,
@@ -71,6 +74,8 @@ function OpsBrainPage() {
           </Card>
         ))}
       </div>
+
+      <ClusterSection />
 
       <Card>
         <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -141,5 +146,95 @@ function OpsBrainPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function ClusterSection() {
+  const clusters = failureClusters().slice(0, 4);
+  if (clusters.length === 0) return null;
+  return (
+    <Card>
+      <CardHeader className="border-b">
+        <div className="flex items-center justify-between gap-2">
+          <div>
+            <CardTitle className="text-base flex items-center gap-2">
+              <AlertTri className="h-4 w-4 text-destructive" /> Active failure clusters
+            </CardTitle>
+            <CardDescription className="text-xs">Grouped by flow × state × scenario. Click into one to investigate.</CardDescription>
+          </div>
+          <Button asChild size="sm" variant="ghost">
+            <Link to="/app/failures">All failures →</Link>
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className="grid gap-4 p-4 md:grid-cols-2">
+        {clusters.map((c, i) => {
+          const def = getFlowDefinition(c.flowDefinitionId);
+          const scenario = def ? findScenario(def, c.scenarioId) : undefined;
+          if (!def || !scenario) return null;
+          const sample = flowInstances.find((fi) => fi.id === c.sampleInstanceId);
+          const fixes = scenario.suggestedFixes.filter((f) => f.appliesToStates.includes(c.atState));
+          return (
+            <div key={i} className="rounded-lg border bg-card overflow-hidden">
+              <div className="border-b bg-muted/30 px-3 py-2 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-xs font-mono font-semibold text-destructive">
+                    {c.count}×
+                  </span>
+                  <span className="font-medium text-sm truncate">{scenario.name}</span>
+                </div>
+                <span className="font-mono text-[10px] text-muted-foreground shrink-0">{scenario.providerCode}</span>
+              </div>
+              <div className="p-3 space-y-3">
+                <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Where in the flow</div>
+                <div className="rounded border bg-background p-1">
+                  <div className="scale-90 origin-top-left" style={{ height: 'fit-content' }}>
+                    <FlowDesigner
+                      definition={def}
+                      failureStateId={c.atState}
+                      scenarioId={c.scenarioId}
+                    />
+                  </div>
+                </div>
+                <div className="text-xs">
+                  <div className="text-muted-foreground">
+                    {def.name} · failed at <span className="font-mono text-foreground">{stateLabel(def, c.atState)}</span>
+                  </div>
+                </div>
+                {fixes.length > 0 && (
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-muted-foreground">
+                      <Wrench className="h-3 w-3" /> Suggested fixes for {stateLabel(def, c.atState)}
+                    </div>
+                    <ul className="space-y-1 text-xs">
+                      {fixes.map((f, j) => (
+                        <li key={j} className="flex gap-2">
+                          <span className="rounded bg-muted px-1.5 text-[10px] uppercase font-medium text-muted-foreground">{f.kind}</span>
+                          <span className="font-medium">{f.title}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <div className="flex gap-2 pt-1 border-t">
+                  {sample && (
+                    <Button asChild size="sm" variant="outline">
+                      <Link to="/app/transaction/$id" params={{ id: sample.transactionId ?? "" }}>
+                        <PlayCircle className="h-3.5 w-3.5 mr-1" /> Replay one
+                      </Link>
+                    </Button>
+                  )}
+                  <Button asChild size="sm" variant="ghost">
+                    <Link to="/app/flows/$id" params={{ id: def.id }}>
+                      Open in Flows <ExternalLink className="h-3 w-3 ml-1" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </CardContent>
+    </Card>
   );
 }
