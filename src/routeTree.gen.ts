@@ -26,6 +26,8 @@ import { Route as AppProvidersRouteImport } from './routes/app.providers'
 import { Route as AppOverviewRouteImport } from './routes/app.overview'
 import { Route as AppOpsBrainRouteImport } from './routes/app.ops-brain'
 import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
+import { Route as AppFlowsRouteImport } from './routes/app.flows'
+import { Route as AppFailuresRouteImport } from './routes/app.failures'
 import { Route as AppAssistantRouteImport } from './routes/app.assistant'
 import { Route as AppApiKeysRouteImport } from './routes/app.api-keys'
 import { Route as AdminTransactionsRouteImport } from './routes/admin.transactions'
@@ -42,6 +44,7 @@ import { Route as AdminAuditLogsRouteImport } from './routes/admin.audit-logs'
 import { Route as AppTransactionIdRouteImport } from './routes/app.transaction.$id'
 import { Route as AppIntegrationsIdRouteImport } from './routes/app.integrations.$id'
 import { Route as AppIncidentIdRouteImport } from './routes/app.incident.$id'
+import { Route as AppFlowsIdRouteImport } from './routes/app.flows.$id'
 import { Route as AdminTenantsIdRouteImport } from './routes/admin.tenants.$id'
 
 const SignupRoute = SignupRouteImport.update({
@@ -129,6 +132,16 @@ const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
   path: '/integrations',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFlowsRoute = AppFlowsRouteImport.update({
+  id: '/flows',
+  path: '/flows',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFailuresRoute = AppFailuresRouteImport.update({
+  id: '/failures',
+  path: '/failures',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAssistantRoute = AppAssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
@@ -209,6 +222,11 @@ const AppIncidentIdRoute = AppIncidentIdRouteImport.update({
   path: '/incident/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFlowsIdRoute = AppFlowsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppFlowsRoute,
+} as any)
 const AdminTenantsIdRoute = AdminTenantsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -236,6 +254,8 @@ export interface FileRoutesByFullPath {
   '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/failures': typeof AppFailuresRoute
+  '/app/flows': typeof AppFlowsRouteWithChildren
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/overview': typeof AppOverviewRoute
@@ -247,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/admin/tenants/$id': typeof AdminTenantsIdRoute
+  '/app/flows/$id': typeof AppFlowsIdRoute
   '/app/incident/$id': typeof AppIncidentIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
@@ -270,6 +291,8 @@ export interface FileRoutesByTo {
   '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/failures': typeof AppFailuresRoute
+  '/app/flows': typeof AppFlowsRouteWithChildren
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/overview': typeof AppOverviewRoute
@@ -281,6 +304,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/admin/tenants/$id': typeof AdminTenantsIdRoute
+  '/app/flows/$id': typeof AppFlowsIdRoute
   '/app/incident/$id': typeof AppIncidentIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
@@ -307,6 +331,8 @@ export interface FileRoutesById {
   '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/failures': typeof AppFailuresRoute
+  '/app/flows': typeof AppFlowsRouteWithChildren
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/overview': typeof AppOverviewRoute
@@ -318,6 +344,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/admin/tenants/$id': typeof AdminTenantsIdRoute
+  '/app/flows/$id': typeof AppFlowsIdRoute
   '/app/incident/$id': typeof AppIncidentIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
@@ -345,6 +372,8 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/failures'
+    | '/app/flows'
     | '/app/integrations'
     | '/app/ops-brain'
     | '/app/overview'
@@ -356,6 +385,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/app/'
     | '/admin/tenants/$id'
+    | '/app/flows/$id'
     | '/app/incident/$id'
     | '/app/integrations/$id'
     | '/app/transaction/$id'
@@ -379,6 +409,8 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/failures'
+    | '/app/flows'
     | '/app/integrations'
     | '/app/ops-brain'
     | '/app/overview'
@@ -390,6 +422,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/admin/tenants/$id'
+    | '/app/flows/$id'
     | '/app/incident/$id'
     | '/app/integrations/$id'
     | '/app/transaction/$id'
@@ -415,6 +448,8 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/failures'
+    | '/app/flows'
     | '/app/integrations'
     | '/app/ops-brain'
     | '/app/overview'
@@ -426,6 +461,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/app/'
     | '/admin/tenants/$id'
+    | '/app/flows/$id'
     | '/app/incident/$id'
     | '/app/integrations/$id'
     | '/app/transaction/$id'
@@ -562,6 +598,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/flows': {
+      id: '/app/flows'
+      path: '/flows'
+      fullPath: '/app/flows'
+      preLoaderRoute: typeof AppFlowsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/failures': {
+      id: '/app/failures'
+      path: '/failures'
+      fullPath: '/app/failures'
+      preLoaderRoute: typeof AppFailuresRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/assistant': {
       id: '/app/assistant'
       path: '/assistant'
@@ -674,6 +724,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIncidentIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/flows/$id': {
+      id: '/app/flows/$id'
+      path: '/$id'
+      fullPath: '/app/flows/$id'
+      preLoaderRoute: typeof AppFlowsIdRouteImport
+      parentRoute: typeof AppFlowsRoute
+    }
     '/admin/tenants/$id': {
       id: '/admin/tenants/$id'
       path: '/$id'
@@ -728,6 +785,18 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AppFlowsRouteChildren {
+  AppFlowsIdRoute: typeof AppFlowsIdRoute
+}
+
+const AppFlowsRouteChildren: AppFlowsRouteChildren = {
+  AppFlowsIdRoute: AppFlowsIdRoute,
+}
+
+const AppFlowsRouteWithChildren = AppFlowsRoute._addFileChildren(
+  AppFlowsRouteChildren,
+)
+
 interface AppIntegrationsRouteChildren {
   AppIntegrationsIdRoute: typeof AppIntegrationsIdRoute
 }
@@ -743,6 +812,8 @@ const AppIntegrationsRouteWithChildren = AppIntegrationsRoute._addFileChildren(
 interface AppRouteChildren {
   AppApiKeysRoute: typeof AppApiKeysRoute
   AppAssistantRoute: typeof AppAssistantRoute
+  AppFailuresRoute: typeof AppFailuresRoute
+  AppFlowsRoute: typeof AppFlowsRouteWithChildren
   AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
   AppOpsBrainRoute: typeof AppOpsBrainRoute
   AppOverviewRoute: typeof AppOverviewRoute
@@ -759,6 +830,8 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppApiKeysRoute: AppApiKeysRoute,
   AppAssistantRoute: AppAssistantRoute,
+  AppFailuresRoute: AppFailuresRoute,
+  AppFlowsRoute: AppFlowsRouteWithChildren,
   AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
   AppOpsBrainRoute: AppOpsBrainRoute,
   AppOverviewRoute: AppOverviewRoute,
