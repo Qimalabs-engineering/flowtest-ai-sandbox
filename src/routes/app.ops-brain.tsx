@@ -1,24 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Brain, AlertTriangle, GitCommit, Link2, Ticket, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import {
+  Brain, AlertTriangle, GitCommit, Link2, Ticket, Search,
+  Activity, PlayCircle, Wrench, ExternalLink,
+} from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { StatusBadge } from "@/components/status-badge";
 import { incidents, opsSummary, type Severity } from "@/lib/ops-data";
 import { cn } from "@/lib/utils";
-import { failureClusters, getFlowDefinition, findScenario, stateLabel, flowInstances } from "@/lib/flow-data";
+import {
+  failureClusters, getFlowDefinition, findScenario, stateLabel, flowInstances,
+} from "@/lib/flow-data";
+import { monitoringEvents, sandboxes, type MonitoringEvent } from "@/lib/sandbox-data";
 import { FlowDesigner } from "@/components/flow-designer";
-import { PlayCircle, Wrench, ExternalLink, AlertTriangle as AlertTri } from "lucide-react";
 
 export const Route = createFileRoute("/app/ops-brain")({
   component: OpsBrainPage,
@@ -30,6 +31,17 @@ const sevTone: Record<Severity, string> = {
   medium: "bg-info/10 text-info ring-info/20",
   low: "bg-muted text-muted-foreground ring-border",
 };
+
+const sourceTone: Record<MonitoringEvent["source"], string> = {
+  datadog: "bg-[#632ca6]/10 text-[#632ca6]",
+  sentry: "bg-[#362d59]/10 text-[#362d59] dark:text-[#a08fdc]",
+  cloudwatch: "bg-[#ff9900]/10 text-[#ff9900]",
+  elk: "bg-[#00bfb3]/10 text-[#00bfb3]",
+};
+
+function sandboxForProvider(provider: string) {
+  return sandboxes.find((s) => s.provider === provider);
+}
 
 function OpsBrainPage() {
   const [q, setQ] = useState("");
@@ -43,9 +55,9 @@ function OpsBrainPage() {
 
   const stats = [
     { label: "Active incidents", value: opsSummary.activeIncidents, icon: AlertTriangle, tone: "text-destructive" },
+    { label: "Replayable signals", value: monitoringEvents.filter((e) => e.replayable).length, icon: PlayCircle, tone: "text-primary" },
     { label: "Suspected regressions", value: opsSummary.regressions, icon: GitCommit, tone: "text-warning" },
     { label: "Failed tx linked to logs", value: opsSummary.failedTxLinked, icon: Link2, tone: "text-info" },
-    { label: "Auto-created tickets", value: opsSummary.openTickets, icon: Ticket, tone: "text-primary" },
   ];
 
   return (
@@ -55,7 +67,9 @@ function OpsBrainPage() {
           <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
             <Brain className="h-5 w-5 text-primary" /> Ops Brain
           </h1>
-          <p className="text-sm text-muted-foreground">AI-driven correlation across logs, deploys, transactions and alerts.</p>
+          <p className="text-sm text-muted-foreground">
+            Correlates production signals with sandbox flows. Every error becomes a candidate for replay.
+          </p>
         </div>
       </div>
 
@@ -75,13 +89,15 @@ function OpsBrainPage() {
         ))}
       </div>
 
+      <ProductionSignals />
+
       <ClusterSection />
 
       <Card>
         <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle>Incident feed</CardTitle>
-            <CardDescription>Real-time signals from connected sources.</CardDescription>
+            <CardDescription>Raw alerts from Datadog, Sentry, CloudWatch, ELK.</CardDescription>
           </div>
           <div className="flex gap-2">
             <div className="relative">
@@ -111,7 +127,6 @@ function OpsBrainPage() {
                 <TableHead>Detected</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Confidence</TableHead>
-                <TableHead>Linked</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -130,7 +145,6 @@ function OpsBrainPage() {
                   <TableCell className="text-xs text-muted-foreground">{new Date(i.detectedAt).toLocaleTimeString()}</TableCell>
                   <TableCell><StatusBadge status={i.status === "investigating" ? "retrying" : i.status === "resolved" ? "delivered" : i.status === "monitoring" ? "pending" : "failed"} /></TableCell>
                   <TableCell className="text-sm">{Math.round(i.confidence * 100)}%</TableCell>
-                  <TableCell className="font-mono text-xs">{i.linkedRef}</TableCell>
                   <TableCell className="text-right">
                     <Button asChild size="sm" variant="outline">
                       <Link to="/app/incident/$id" params={{ id: i.id }}>Investigate</Link>
@@ -139,13 +153,95 @@ function OpsBrainPage() {
                 </TableRow>
               ))}
               {filtered.length === 0 && (
-                <TableRow><TableCell colSpan={9} className="text-center py-8 text-sm text-muted-foreground">No incidents match your filters.</TableCell></TableRow>
+                <TableRow><TableCell colSpan={8} className="text-center py-8 text-sm text-muted-foreground">No incidents match your filters.</TableCell></TableRow>
               )}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function ProductionSignals() {
+  const events = monitoringEvents;
+  return (
+    <Card>
+      <CardHeader className="border-b">
+        <div className="flex items-center justify-between gap-2">
+          <div>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Activity className="h-4 w-4 text-primary" /> Production signals → sandbox
+            </CardTitle>
+            <CardDescription className="text-xs">
+              Errors arriving from your APM, mapped to the flow they hit and the sandbox you can replay them in.
+            </CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="p-0">
+        <ul className="divide-y">
+          {events.map((e) => {
+            const sb = sandboxForProvider(e.provider);
+            const def = e.flowId ? getFlowDefinition(e.flowId) : undefined;
+            return (
+              <li key={e.id} className="grid gap-3 px-4 py-3 md:grid-cols-[1fr_auto] md:items-center">
+                <div className="space-y-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className={cn("rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide", sourceTone[e.source])}>
+                      {e.source}
+                    </span>
+                    {e.severity === "error" && (
+                      <Badge variant="destructive" className="text-[10px]">error</Badge>
+                    )}
+                    {e.severity === "warn" && (
+                      <Badge className="bg-warning/20 text-warning-foreground text-[10px]">warn</Badge>
+                    )}
+                    <span className="font-medium text-sm truncate">{e.title}</span>
+                    {e.count > 1 && (
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-mono">
+                        {e.count}×
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                    <span>{e.provider}</span>
+                    {def && (
+                      <>
+                        <span>·</span>
+                        <span className="font-mono">{def.name}</span>
+                      </>
+                    )}
+                    <span>·</span>
+                    <span>{new Date(e.occurredAt).toLocaleString()}</span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 justify-end">
+                  {sb && (
+                    <Button asChild size="sm" variant="ghost">
+                      <Link to="/app/sandboxes/$id" params={{ id: sb.id }}>
+                        {sb.name} <ExternalLink className="h-3 w-3 ml-1" />
+                      </Link>
+                    </Button>
+                  )}
+                  {e.replayable ? (
+                    <Button asChild size="sm">
+                      <Link to="/app/replay">
+                        <PlayCircle className="h-3.5 w-3.5 mr-1" /> Replay
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button size="sm" variant="outline" disabled>
+                      <Ticket className="h-3.5 w-3.5 mr-1" /> Not replayable
+                    </Button>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -158,9 +254,9 @@ function ClusterSection() {
         <div className="flex items-center justify-between gap-2">
           <div>
             <CardTitle className="text-base flex items-center gap-2">
-              <AlertTri className="h-4 w-4 text-destructive" /> Active failure clusters
+              <AlertTriangle className="h-4 w-4 text-destructive" /> Active failure clusters
             </CardTitle>
-            <CardDescription className="text-xs">Grouped by flow × state × scenario. Click into one to investigate.</CardDescription>
+            <CardDescription className="text-xs">Grouped by flow × state × scenario. Replay any one to validate a fix.</CardDescription>
           </div>
           <Button asChild size="sm" variant="ghost">
             <Link to="/app/failures">All failures →</Link>
@@ -188,7 +284,7 @@ function ClusterSection() {
               <div className="p-3 space-y-3">
                 <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Where in the flow</div>
                 <div className="rounded border bg-background p-1">
-                  <div className="scale-90 origin-top-left" style={{ height: 'fit-content' }}>
+                  <div className="scale-90 origin-top-left" style={{ height: "fit-content" }}>
                     <FlowDesigner
                       definition={def}
                       failureStateId={c.atState}
@@ -196,15 +292,13 @@ function ClusterSection() {
                     />
                   </div>
                 </div>
-                <div className="text-xs">
-                  <div className="text-muted-foreground">
-                    {def.name} · failed at <span className="font-mono text-foreground">{stateLabel(def, c.atState)}</span>
-                  </div>
+                <div className="text-xs text-muted-foreground">
+                  {def.name} · failed at <span className="font-mono text-foreground">{stateLabel(def, c.atState)}</span>
                 </div>
                 {fixes.length > 0 && (
                   <div className="space-y-1">
                     <div className="flex items-center gap-1 text-[10px] uppercase tracking-wide text-muted-foreground">
-                      <Wrench className="h-3 w-3" /> Suggested fixes for {stateLabel(def, c.atState)}
+                      <Wrench className="h-3 w-3" /> Suggested fixes
                     </div>
                     <ul className="space-y-1 text-xs">
                       {fixes.map((f, j) => (
@@ -219,8 +313,8 @@ function ClusterSection() {
                 <div className="flex gap-2 pt-1 border-t">
                   {sample && (
                     <Button asChild size="sm" variant="outline">
-                      <Link to="/app/transaction/$id" params={{ id: sample.transactionId ?? "" }}>
-                        <PlayCircle className="h-3.5 w-3.5 mr-1" /> Replay one
+                      <Link to="/app/replay/$instanceId" params={{ instanceId: sample.id }}>
+                        <PlayCircle className="h-3.5 w-3.5 mr-1" /> Replay sample
                       </Link>
                     </Button>
                   )}
