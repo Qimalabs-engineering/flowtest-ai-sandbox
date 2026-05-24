@@ -13,6 +13,7 @@ import {
   Brain,
   AlertTriangle,
   Boxes,
+  PlayCircle,
 } from "lucide-react";
 
 import {
@@ -37,7 +38,8 @@ const build = [
 ];
 
 const observe = [
-  { title: "Instances", url: "/app/transactions", icon: ArrowLeftRight },
+  { title: "Instances", url: "/app/instances", icon: ArrowLeftRight },
+  { title: "Replay", url: "/app/replay", icon: PlayCircle },
   { title: "Failures", url: "/app/failures", icon: AlertTriangle },
   { title: "Webhooks", url: "/app/webhooks", icon: Webhook },
   { title: "Ops Brain", url: "/app/ops-brain", icon: Brain },
