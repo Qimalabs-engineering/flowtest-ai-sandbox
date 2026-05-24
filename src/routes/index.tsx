@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingHeader, MarketingFooter } from "@/components/marketing-shell";
-import { ReplayLoopDemo } from "@/components/replay-loop-demo";
+import { SlackReplayDemo } from "@/components/slack-replay-demo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
