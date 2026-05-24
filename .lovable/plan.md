@@ -1,145 +1,191 @@
+# FlowSim v2 — Lifecycle Platform Refactor
 
-## Goal
-
-Shift FlowSim from "visualizes flows" to "lets users understand, reproduce, and fix fintech failures." Failures become the spine of the product; every view answers the four questions: **What happened? Where? Why? What now?**
-
-This plan assumes the flow-based refactor from the previous plan is in place (FlowDefinition, FlowInstance, Flow Designer graph, `/app/failures`, `/app/instances`). It layers failure-first UX, Replay, and Scenario Overlay on top.
+I read your direction end-to-end. Below is what I'll build, what I'll cut, and what I'd push back on — followed by the concrete file/route plan.
 
 ---
 
-## 1. Failure as a first-class concept (cross-cutting)
+## What I agree with (and will build)
 
-A single `FailurePoint` primitive used everywhere:
+The big idea is right: FlowSim should be the **lifecycle loop** for fintech integrations, not a mock-API tool with a dashboard bolted on. The repositioning to **Sandbox → Scenario → Instance → Replay → Fix-validation**, with **Providers as the entry point** and **Monitoring + Ops Brain as the feedback edge**, is the correct product spine.
 
+Specifically I'll build:
+
+1. New IA and navigation
+2. Providers page → Create-Sandbox wizard → Sandboxes list → Sandbox detail
+3. Scenarios as a first-class authored object
+4. Instances (replacing the generic "Transactions" surface) with the existing flow graph + four-questions panel already wired in
+5. Dedicated **Replay** page with original-vs-replay comparison and a "fix validated" outcome
+6. **Monitoring** page framed as *integration signals* (which provider, which flow, replayable?) — not generic observability
+7. Ops Brain re-pointed at the new Instance/Replay primitives
+8. Integrations page grouped by category (Code / Monitoring / Comms / Issue tracking)
+9. **Code-repo and Slack surfaces treated as product, not settings** (see below)
+10. Language pass: Sandbox / Flow / Scenario / Instance / Replay / Fix-validation everywhere
+
+## Code-repo surface — provider-agnostic
+
+You're right that this can't be GitHub-only. I'll build a **single Code Repository surface** that supports **GitHub, GitLab, Bitbucket** (and is structured so Azure DevOps / Gitea slot in later). Same screens, same flow, only the provider badge + auth shape differs.
+
+Shared model:
 ```
-FailurePoint {
-  instanceId
-  flowDefinitionId
-  atState           // where it broke
-  atTransition?     // which transition fired the failure
-  scenarioId        // which FailureScenario matched (real provider error)
-  cause             // short human label
-  providerCode      // real error code, e.g. "02" / "ResultCode:1032"
-  suggestedFix      // tied to the state, see Ops Brain section
-  evidence[]        // events, webhooks, logs that prove it
-}
-```
-
-A `<FailureBadge instance>` component (icon + state name + reason code) is reused in:
-- Instances table (replaces the bare "failed" pill)
-- Instance detail header
-- Webhooks list (when a delivery is tied to a failed instance)
-- Events stream
-- Ops Brain cards
-- `/app/failures` (already)
-- Overview KPIs ("12 instances failed at `awaiting_otp` — Mono")
-
-In timelines and graphs, the failure point is marked with a **red ring + pulse** on the offending state node and a **red dashed edge** for the failure transition. Hovering reveals the reason code + suggested fix.
-
-## 2. The "Four Questions" panel
-
-Every instance detail page (`/app/instances/$id`) and every Ops Brain incident card gets a fixed top panel with four short, structured cells:
-
-```
-┌─ What happened ─────────┬─ Where in the flow ───────┐
-│ charge.failed           │ State: awaiting_3ds       │
-│ "Declined by issuer"    │ Transition: submit_otp →  │
-│ Code: 02                │   failed                  │
-├─ Why ───────────────────┼─ What to do ──────────────┤
-│ Issuer flagged the      │ 1. Retry with step-up     │
-│ transaction (insufficient│ 2. Fall back to bank     │
-│ funds suspected).       │    transfer rail          │
-│ Scenario: card_declined │ Open runbook →            │
-└─────────────────────────┴───────────────────────────┘
+RepoProvider = "github" | "gitlab" | "bitbucket"
+RepoConnection { id, provider, account, status, lastSyncedAt }
+Repository    { id, connectionId, provider, fullName, defaultBranch, language, framework }
+RepoMapping   { repoId, sandboxId, providerId, flowIds[] }
 ```
 
-Same component reused on Ops Brain cards and `/app/failures` detail. This is the contract: any failure view that doesn't render these four answers is incomplete.
+Shared screens (one set, branded per provider):
+- **Connect repository provider** — provider picker (GitHub / GitLab / Bitbucket) → auth screen → repo list
+- **Repository list** — across all connected providers, with provider chip
+- **Repo → Sandbox mapping** — same wizard regardless of source
+- **Generated integration code panel** — language tabs (Node/Python/Go), framework auto-detected, with copy/download/"open PR" actions. Identical UX for all three providers.
+- **Webhook handler + scenario test file generation** — same templates, same UX
 
-## 3. Ops Brain rework
+Where providers differ (handled in one config map, not duplicated UI):
+- Auth shape (GitHub App vs GitLab PAT vs Bitbucket OAuth) — shown in connect screen only
+- "Open PR" wording becomes "Open Merge Request" on GitLab
+- Repo URL format
 
-`/app/ops-brain` becomes failure-attribution-first:
+This lives as **`/app/integrations/code`** (category landing) with per-connection detail at `/app/integrations/code/$connectionId`. Sandbox detail still has the "Generate integration code" CTA — it opens the same generator, scoped to whichever repo is mapped.
 
-- Primary card layout puts **"Where in the flow"** at the top: a mini graph of the affected FlowDefinition with the failing state highlighted, plus a count badge ("47 instances failed here in the last hour").
-- **Suggested fixes are tied to flow state**, not generic. Each `FailureScenario` in a provider spec declares `suggestedFixes[]` with: title, kind (`retry` | `fallback` | `config_change` | `escalate`), and which state(s) the fix applies to. Ops Brain renders the fixes whose state matches the failing state.
-- Cluster cards: group active failures by `flowDefinition × atState × scenarioId` so on-call sees "47× Paystack charge failed at `awaiting_3ds` (code 02)" rather than 47 separate alerts.
-- Each card has actions: **Replay one**, **Open in Flows**, **Open runbook**, **Acknowledge**.
+## Slack surface — product, not settings
 
-## 4. Replay (UI only)
+Slack gets:
+- Marketing-home **animated Slack thread** demoing `@flowsim` flow (CSS/Motion, no backend)
+- In-app **Slack workspace connect** screen + channel routing rules + message preview
+- Per-incident "Send to Slack" action on Ops Brain and Replay results
+- Honest framing: animation + UI prototype, not a live bot (see below)
 
-New route `/app/instances/$id/replay` (modal/drawer on the instance page is also fine).
+## What I'd push back on
 
-Behavior:
-- Reuses the instance graph component with a **playhead**.
-- Controls: play / pause / step / speed (1×, 2×, 4×). Scrubber across the event timeline.
-- As the playhead advances:
-  - Traveled states light up in sequence with respect to original timestamps (compressed by speed)
-  - Each event appears in a side log as it "happens"
-  - Webhook deliveries animate as outbound pulses from the emitting state
-- **Divergence highlight**: the FlowDefinition declares a `happyPath[]` (state sequence for the success terminal). The replay overlays the happy path as a faint blue track. The moment the actual instance leaves the happy path, the divergence point gets a yellow marker + label ("Diverged here: expected `processing → success`, got `processing → failed`"). From divergence onward, the actual path is drawn in red.
-- A "Replay against current spec" toggle (disabled, tooltip "available when live sandbox is wired") signals where this becomes a real reproduction tool later.
+These I'll **drop or scope down** unless you object:
 
-No backend changes — replay reads the existing event log on the FlowInstance and animates it client-side with `requestAnimationFrame` + a timeline scheduler. ~250 LOC component.
+- **"Production-faithful" fidelity tier promising real endpoints + real signatures.** In a frontend-only mock layer this would be a lie. I'll keep the three tiers as a labelled product concept (Template / Provider-like / Production-faithful) shown in UI, but copy will be honest: Production-faithful means *payload + error-code + webhook-name + signature-shape parity with the provider spec we ship*, not a live proxy.
+- **Real OAuth for GitHub/GitLab/Bitbucket/Datadog/Sentry/Slack.** I'll build the connect UX and realistic mock data. Wiring real OAuth is a backend project.
+- **Slack slash commands as a working bot.** Config + animated demo + message previews only.
+- **Jira/ClickUp ticket creation that actually creates tickets.** Buttons + realistic "ticket created" preview, clearly a prototype.
+- **"Generate fix suggestion" as a separate AI surface.** Already lives inside Ops Brain's Four Questions. I'll link, not duplicate.
+- **Splitting Monitoring and Ops Brain into two unrelated pages.** They're the same loop. Monitoring = raw feed. Ops Brain = interpreted clusters. One-click jump between them.
+- **Generic "Analytics"/vanity charts.** Cut from Overview — replaced with the operational cards you listed (active sandboxes, replay runs, fix validations passed, etc.).
+- **Editing the Flow Designer.** Stays read-only as previously agreed.
 
-## 5. Scenario Overlay
+## What I'd add that you didn't ask for
 
-On `/app/flows/$id` (Flow Designer, read-only), add a **Scenario picker** in the toolbar listing the FlowDefinition's `failureScenarios[]`.
-
-When a scenario is selected:
-- The graph re-renders with normal transitions dimmed to 30% opacity.
-- The failure transition(s) introduced by that scenario light up in red, animated dashed.
-- Affected state(s) get a red ring.
-- A side panel shows: scenario name, real provider error code, webhook(s) that will fire under this scenario, expected client-visible symptoms, suggested fixes.
-- "Compare" mode: split view (normal | with scenario) so users can see exactly what the scenario changes.
-
-Visual language is consistent everywhere:
-- **Normal transition** — solid, neutral
-- **Failure transition** — red, dashed, animated
-- **Happy path** — faint blue track (replay only)
-- **Divergence point** — yellow marker
-- **Failure point** — red ring + pulse on the state node
-
-## 6. Cross-page consistency pass
-
-Update existing views so the failure narrative carries through:
-
-- **`/app/overview`** — add a "Top failure points" widget: ranked list of `(flowDefinition, state, scenario)` with counts, click → filtered `/app/failures`.
-- **`/app/instances`** — failed rows show `<FailureBadge>` with state + reason code inline, not a generic red dot.
-- **`/app/webhooks`** — deliveries linked to failed instances get a failure chip and a "Jump to failure point" action.
-- **`/app/events`** — events that triggered a failure transition are tagged with a red side-rail.
-- **`/app/failures`** — Catalog tab adds "Preview in graph" link (opens `/app/flows/$id?scenario=...` with the overlay pre-applied). Live tab uses cluster cards identical to Ops Brain.
-- **`/app/assistant`** — when the assistant references an incident, it renders the same Four Questions panel inline.
-
-## 7. Flow Designer stays read-only
-
-Explicitly: no node drag, no edge editing, no inline rename. The toolbar exposes only view controls (zoom, fit, scenario overlay, layout toggle). A small "Read-only — editing coming soon" hint sits in the toolbar so users don't hunt for an edit button.
+- **"Fix validated" badge** on Instances that have a passing replay — makes the loop visible.
+- **"Replay this in sandbox" button** on every failed Instance, Monitoring event, and Ops Brain cluster — same component, same destination. One verb, everywhere.
+- **Empty-state coaching** on Sandboxes/Scenarios/Replay.
 
 ---
 
-## File plan
+## Information architecture
+
+Final left-nav:
+
+```
+Overview
+Providers
+Sandboxes
+Flows
+Scenarios
+Instances
+Replay
+Monitoring
+Ops Brain
+Integrations
+─────────────
+API Keys
+Settings
+```
+
+Removed top-level entries: `Transactions`, `Failures`, `Webhooks`. They fold into Instances (with filters) and Sandbox-detail tabs. Failures stays as a *lens* (badges, filters), not a page.
+
+## Route plan
+
+**New routes**
+- `app.sandboxes.index.tsx` — list
+- `app.sandboxes.new.tsx` — 5-step wizard (Provider → APIs → Fidelity → Webhook → Review)
+- `app.sandboxes.$id.tsx` — detail (overview / keys / APIs / scenarios / instances / webhooks / integration code)
+- `app.instances.index.tsx` — list (rename of transactions, richer filters)
+- `app.instances.$id.tsx` — detail (graph + timeline + payloads + four-questions + replay drawer)
+- `app.replay.index.tsx` — failed-instance picker + replay history + comparison
+- `app.replay.$instanceId.tsx` — original vs replay side-by-side, "fix validated" verdict
+- `app.monitoring.tsx` — production signal feed with "Replay this" CTA
+- `app.scenarios.$id.tsx` — scenario builder/editor
+- `app.integrations.code.tsx` — code-repo provider landing (GitHub/GitLab/Bitbucket)
+- `app.integrations.code.$connectionId.tsx` — repo list + mapping + code generation per connection
+- `app.integrations.slack.tsx` — workspace connect + channel routing + message preview
+
+**Reworked**
+- `app.overview.tsx`, `app.providers.tsx`, `app.ops-brain.tsx`, `app.integrations.tsx` (category grouping), `app.scenarios.tsx`, marketing `index.tsx` (Slack animation)
+
+**Retired (with redirects)**
+- `app.transactions.tsx`, `app.transaction.$id.tsx` → `/app/instances`
+- `app.failures.tsx` → `/app/instances?outcome=failed`
+- `app.webhooks.tsx` → sandbox-detail tab
+
+## Component plan
 
 **New**
-- `src/components/failure-badge.tsx`
-- `src/components/four-questions-panel.tsx`
-- `src/components/flow-replay.tsx` (graph + playhead + scheduler)
-- `src/components/scenario-overlay-picker.tsx`
-- `src/lib/replay-scheduler.ts` (timeline → frames)
-- `src/routes/app.instances.$id.replay.tsx` (or modal — decide during build)
+- `components/sandbox-wizard/*`
+- `components/sandbox-card.tsx`, `provider-card.tsx`
+- `components/scenario-builder.tsx`
+- `components/replay-comparison.tsx` — two-column diff + verdict chip
+- `components/monitoring-source-card.tsx` — Datadog/Sentry/CW/ELK tiles
+- `components/repo-provider-picker.tsx` — GitHub/GitLab/Bitbucket selector
+- `components/repo-connect-flow.tsx` — provider-aware connect (one component, one config map)
+- `components/integration-code-panel.tsx` — language tabs, copy/download, "Open PR / Merge Request"
+- `components/slack-animation.tsx` — looping animated thread (Motion, no backend)
+- `components/slack-message-preview.tsx`
+- `components/fix-validation-badge.tsx`
 
-**Edited**
-- `src/lib/flow-types.ts` — add `happyPath[]` to `FlowDefinition`, `suggestedFixes[]` to `FailureScenario`, `FailurePoint` type
-- `src/components/flow-designer.tsx` — accept `scenarioOverlay` and `failurePoint` props
-- `src/components/flow-instance-graph.tsx` — accept `playhead` and `divergencePoint` props
-- `src/routes/app.flows.$id.tsx` — wire scenario picker
-- `src/routes/app.instances.$id.tsx` — Four Questions panel + Replay button
-- `src/routes/app.ops-brain.tsx` — cluster cards, "Where in the flow" mini graph, fixes-by-state
-- `src/routes/app.overview.tsx` — top failure points widget
-- `src/routes/app.instances.tsx`, `app.webhooks.tsx`, `app.events.tsx`, `app.failures.tsx` — `<FailureBadge>` integration
-- Provider specs (`src/lib/providers/*/flows/*.ts`) — backfill `happyPath` and `suggestedFixes` on each scenario
+**Reused as-is**: `flow-designer`, `flow-replay`, `four-questions-panel`, `failure-badge`.
 
-## Scope boundary
+## Data plan (mock layer)
 
-UI/UX only. No real replay execution, no backend writes, no edit mode in the designer. All data comes from the existing mock layer + provider specs.
+Extend `lib/flow-data.ts`; add:
+- `lib/sandbox-data.ts` — Sandbox, Scenario, MonitoringEvent, ReplayRun + seeds
+- `lib/repo-data.ts` — RepoConnection, Repository, RepoMapping seeded across all three providers
+- `lib/code-generators.ts` — language × framework × provider templates
 
-## Open question
+`FlowInstance` gains `sandboxId` and `scenarioMatchedId`.
 
-For Replay UI: **inline drawer on the instance page** (less context loss, can see metadata while scrubbing) or **dedicated full-screen route** (more room for the graph + event log)? My default is **inline drawer** — say the word if you'd rather have the full-screen route.
+Seed enough mock data so every page has signal: 3–5 sandboxes, 8–10 scenarios, 6 monitoring events, 4 replay runs (mix of passed/failed), 2 GitHub repos + 1 GitLab + 1 Bitbucket.
+
+## Fidelity tiers — honest copy
+
+In the wizard and on sandbox cards:
+- **Template** — generic shape, useful for wiring.
+- **Provider-like** — provider-shaped payloads, common error codes, named webhooks.
+- **Production-faithful** — full payload + error-code + webhook-signature parity with our shipped provider spec. *Still a sandbox — does not call the provider.*
+
+## Out of scope this pass
+
+- Real OAuth for any external service
+- Real code generation against a live repo (preview only, templated)
+- Real Slack bot / slash commands
+- Editable Flow Designer
+- Backend / Lovable Cloud
+
+## Build order
+
+1. IA + sidebar + redirects from retired routes
+2. Data layer: Sandbox, Scenario, MonitoringEvent, ReplayRun, RepoConnection + seeds
+3. Providers → Wizard → Sandboxes list → Sandbox detail
+4. Scenarios list + builder
+5. Instances rename + sandbox/scenario fields
+6. Replay page + comparison (the differentiator — gets care)
+7. Monitoring page
+8. Ops Brain rewire
+9. Integrations regroup + **Code provider-agnostic flow (GitHub/GitLab/Bitbucket)** + Slack config + integration-code panel
+10. Overview rewrite
+11. Marketing home Slack animation
+12. Copy pass
+
+App stays runnable between batches.
+
+---
+
+## One thing to confirm before I start
+
+**Fidelity tiers**: accept the honest framing (parity with our spec, still a sandbox), or design as if real-provider proxying exists today? The first is shippable now; the second is a promise I can't keep on the frontend.
+
+Say "go" and I start with steps 1–3.
