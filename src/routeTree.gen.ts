@@ -23,10 +23,12 @@ import { Route as AppTransactionsRouteImport } from './routes/app.transactions'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppScenariosRouteImport } from './routes/app.scenarios'
 import { Route as AppSandboxesRouteImport } from './routes/app.sandboxes'
+import { Route as AppReplayRouteImport } from './routes/app.replay'
 import { Route as AppProvidersRouteImport } from './routes/app.providers'
 import { Route as AppOverviewRouteImport } from './routes/app.overview'
 import { Route as AppOpsBrainRouteImport } from './routes/app.ops-brain'
 import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
+import { Route as AppInstancesRouteImport } from './routes/app.instances'
 import { Route as AppFlowsRouteImport } from './routes/app.flows'
 import { Route as AppFailuresRouteImport } from './routes/app.failures'
 import { Route as AppAssistantRouteImport } from './routes/app.assistant'
@@ -43,11 +45,15 @@ import { Route as AdminIncidentsRouteImport } from './routes/admin.incidents'
 import { Route as AdminFeatureFlagsRouteImport } from './routes/admin.feature-flags'
 import { Route as AdminAuditLogsRouteImport } from './routes/admin.audit-logs'
 import { Route as AppSandboxesIndexRouteImport } from './routes/app.sandboxes.index'
+import { Route as AppReplayIndexRouteImport } from './routes/app.replay.index'
+import { Route as AppInstancesIndexRouteImport } from './routes/app.instances.index'
 import { Route as AppFlowsIndexRouteImport } from './routes/app.flows.index'
 import { Route as AppTransactionIdRouteImport } from './routes/app.transaction.$id'
 import { Route as AppSandboxesNewRouteImport } from './routes/app.sandboxes.new'
 import { Route as AppSandboxesIdRouteImport } from './routes/app.sandboxes.$id'
+import { Route as AppReplayInstanceIdRouteImport } from './routes/app.replay.$instanceId'
 import { Route as AppIntegrationsIdRouteImport } from './routes/app.integrations.$id'
+import { Route as AppInstancesIdRouteImport } from './routes/app.instances.$id'
 import { Route as AppIncidentIdRouteImport } from './routes/app.incident.$id'
 import { Route as AppFlowsIdRouteImport } from './routes/app.flows.$id'
 import { Route as AdminTenantsIdRouteImport } from './routes/admin.tenants.$id'
@@ -122,6 +128,11 @@ const AppSandboxesRoute = AppSandboxesRouteImport.update({
   path: '/sandboxes',
   getParentRoute: () => AppRoute,
 } as any)
+const AppReplayRoute = AppReplayRouteImport.update({
+  id: '/replay',
+  path: '/replay',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppProvidersRoute = AppProvidersRouteImport.update({
   id: '/providers',
   path: '/providers',
@@ -140,6 +151,11 @@ const AppOpsBrainRoute = AppOpsBrainRouteImport.update({
 const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
   id: '/integrations',
   path: '/integrations',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInstancesRoute = AppInstancesRouteImport.update({
+  id: '/instances',
+  path: '/instances',
   getParentRoute: () => AppRoute,
 } as any)
 const AppFlowsRoute = AppFlowsRouteImport.update({
@@ -222,6 +238,16 @@ const AppSandboxesIndexRoute = AppSandboxesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppSandboxesRoute,
 } as any)
+const AppReplayIndexRoute = AppReplayIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppReplayRoute,
+} as any)
+const AppInstancesIndexRoute = AppInstancesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppInstancesRoute,
+} as any)
 const AppFlowsIndexRoute = AppFlowsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -242,10 +268,20 @@ const AppSandboxesIdRoute = AppSandboxesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppSandboxesRoute,
 } as any)
+const AppReplayInstanceIdRoute = AppReplayInstanceIdRouteImport.update({
+  id: '/$instanceId',
+  path: '/$instanceId',
+  getParentRoute: () => AppReplayRoute,
+} as any)
 const AppIntegrationsIdRoute = AppIntegrationsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AppIntegrationsRoute,
+} as any)
+const AppInstancesIdRoute = AppInstancesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppInstancesRoute,
 } as any)
 const AppIncidentIdRoute = AppIncidentIdRouteImport.update({
   id: '/incident/$id',
@@ -286,10 +322,12 @@ export interface FileRoutesByFullPath {
   '/app/assistant': typeof AppAssistantRoute
   '/app/failures': typeof AppFailuresRoute
   '/app/flows': typeof AppFlowsRouteWithChildren
+  '/app/instances': typeof AppInstancesRouteWithChildren
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
+  '/app/replay': typeof AppReplayRouteWithChildren
   '/app/sandboxes': typeof AppSandboxesRouteWithChildren
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
@@ -300,11 +338,15 @@ export interface FileRoutesByFullPath {
   '/admin/tenants/$id': typeof AdminTenantsIdRoute
   '/app/flows/$id': typeof AppFlowsIdRoute
   '/app/incident/$id': typeof AppIncidentIdRoute
+  '/app/instances/$id': typeof AppInstancesIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
+  '/app/replay/$instanceId': typeof AppReplayInstanceIdRoute
   '/app/sandboxes/$id': typeof AppSandboxesIdRoute
   '/app/sandboxes/new': typeof AppSandboxesNewRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
   '/app/flows/': typeof AppFlowsIndexRoute
+  '/app/instances/': typeof AppInstancesIndexRoute
+  '/app/replay/': typeof AppReplayIndexRoute
   '/app/sandboxes/': typeof AppSandboxesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -340,11 +382,15 @@ export interface FileRoutesByTo {
   '/admin/tenants/$id': typeof AdminTenantsIdRoute
   '/app/flows/$id': typeof AppFlowsIdRoute
   '/app/incident/$id': typeof AppIncidentIdRoute
+  '/app/instances/$id': typeof AppInstancesIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
+  '/app/replay/$instanceId': typeof AppReplayInstanceIdRoute
   '/app/sandboxes/$id': typeof AppSandboxesIdRoute
   '/app/sandboxes/new': typeof AppSandboxesNewRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
   '/app/flows': typeof AppFlowsIndexRoute
+  '/app/instances': typeof AppInstancesIndexRoute
+  '/app/replay': typeof AppReplayIndexRoute
   '/app/sandboxes': typeof AppSandboxesIndexRoute
 }
 export interface FileRoutesById {
@@ -371,10 +417,12 @@ export interface FileRoutesById {
   '/app/assistant': typeof AppAssistantRoute
   '/app/failures': typeof AppFailuresRoute
   '/app/flows': typeof AppFlowsRouteWithChildren
+  '/app/instances': typeof AppInstancesRouteWithChildren
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
+  '/app/replay': typeof AppReplayRouteWithChildren
   '/app/sandboxes': typeof AppSandboxesRouteWithChildren
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
@@ -385,11 +433,15 @@ export interface FileRoutesById {
   '/admin/tenants/$id': typeof AdminTenantsIdRoute
   '/app/flows/$id': typeof AppFlowsIdRoute
   '/app/incident/$id': typeof AppIncidentIdRoute
+  '/app/instances/$id': typeof AppInstancesIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
+  '/app/replay/$instanceId': typeof AppReplayInstanceIdRoute
   '/app/sandboxes/$id': typeof AppSandboxesIdRoute
   '/app/sandboxes/new': typeof AppSandboxesNewRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
   '/app/flows/': typeof AppFlowsIndexRoute
+  '/app/instances/': typeof AppInstancesIndexRoute
+  '/app/replay/': typeof AppReplayIndexRoute
   '/app/sandboxes/': typeof AppSandboxesIndexRoute
 }
 export interface FileRouteTypes {
@@ -417,10 +469,12 @@ export interface FileRouteTypes {
     | '/app/assistant'
     | '/app/failures'
     | '/app/flows'
+    | '/app/instances'
     | '/app/integrations'
     | '/app/ops-brain'
     | '/app/overview'
     | '/app/providers'
+    | '/app/replay'
     | '/app/sandboxes'
     | '/app/scenarios'
     | '/app/settings'
@@ -431,11 +485,15 @@ export interface FileRouteTypes {
     | '/admin/tenants/$id'
     | '/app/flows/$id'
     | '/app/incident/$id'
+    | '/app/instances/$id'
     | '/app/integrations/$id'
+    | '/app/replay/$instanceId'
     | '/app/sandboxes/$id'
     | '/app/sandboxes/new'
     | '/app/transaction/$id'
     | '/app/flows/'
+    | '/app/instances/'
+    | '/app/replay/'
     | '/app/sandboxes/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -471,11 +529,15 @@ export interface FileRouteTypes {
     | '/admin/tenants/$id'
     | '/app/flows/$id'
     | '/app/incident/$id'
+    | '/app/instances/$id'
     | '/app/integrations/$id'
+    | '/app/replay/$instanceId'
     | '/app/sandboxes/$id'
     | '/app/sandboxes/new'
     | '/app/transaction/$id'
     | '/app/flows'
+    | '/app/instances'
+    | '/app/replay'
     | '/app/sandboxes'
   id:
     | '__root__'
@@ -501,10 +563,12 @@ export interface FileRouteTypes {
     | '/app/assistant'
     | '/app/failures'
     | '/app/flows'
+    | '/app/instances'
     | '/app/integrations'
     | '/app/ops-brain'
     | '/app/overview'
     | '/app/providers'
+    | '/app/replay'
     | '/app/sandboxes'
     | '/app/scenarios'
     | '/app/settings'
@@ -515,11 +579,15 @@ export interface FileRouteTypes {
     | '/admin/tenants/$id'
     | '/app/flows/$id'
     | '/app/incident/$id'
+    | '/app/instances/$id'
     | '/app/integrations/$id'
+    | '/app/replay/$instanceId'
     | '/app/sandboxes/$id'
     | '/app/sandboxes/new'
     | '/app/transaction/$id'
     | '/app/flows/'
+    | '/app/instances/'
+    | '/app/replay/'
     | '/app/sandboxes/'
   fileRoutesById: FileRoutesById
 }
@@ -633,6 +701,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSandboxesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/replay': {
+      id: '/app/replay'
+      path: '/replay'
+      fullPath: '/app/replay'
+      preLoaderRoute: typeof AppReplayRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/providers': {
       id: '/app/providers'
       path: '/providers'
@@ -659,6 +734,13 @@ declare module '@tanstack/react-router' {
       path: '/integrations'
       fullPath: '/app/integrations'
       preLoaderRoute: typeof AppIntegrationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/instances': {
+      id: '/app/instances'
+      path: '/instances'
+      fullPath: '/app/instances'
+      preLoaderRoute: typeof AppInstancesRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/flows': {
@@ -773,6 +855,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSandboxesIndexRouteImport
       parentRoute: typeof AppSandboxesRoute
     }
+    '/app/replay/': {
+      id: '/app/replay/'
+      path: '/'
+      fullPath: '/app/replay/'
+      preLoaderRoute: typeof AppReplayIndexRouteImport
+      parentRoute: typeof AppReplayRoute
+    }
+    '/app/instances/': {
+      id: '/app/instances/'
+      path: '/'
+      fullPath: '/app/instances/'
+      preLoaderRoute: typeof AppInstancesIndexRouteImport
+      parentRoute: typeof AppInstancesRoute
+    }
     '/app/flows/': {
       id: '/app/flows/'
       path: '/'
@@ -801,12 +897,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSandboxesIdRouteImport
       parentRoute: typeof AppSandboxesRoute
     }
+    '/app/replay/$instanceId': {
+      id: '/app/replay/$instanceId'
+      path: '/$instanceId'
+      fullPath: '/app/replay/$instanceId'
+      preLoaderRoute: typeof AppReplayInstanceIdRouteImport
+      parentRoute: typeof AppReplayRoute
+    }
     '/app/integrations/$id': {
       id: '/app/integrations/$id'
       path: '/$id'
       fullPath: '/app/integrations/$id'
       preLoaderRoute: typeof AppIntegrationsIdRouteImport
       parentRoute: typeof AppIntegrationsRoute
+    }
+    '/app/instances/$id': {
+      id: '/app/instances/$id'
+      path: '/$id'
+      fullPath: '/app/instances/$id'
+      preLoaderRoute: typeof AppInstancesIdRouteImport
+      parentRoute: typeof AppInstancesRoute
     }
     '/app/incident/$id': {
       id: '/app/incident/$id'
@@ -890,6 +1000,20 @@ const AppFlowsRouteWithChildren = AppFlowsRoute._addFileChildren(
   AppFlowsRouteChildren,
 )
 
+interface AppInstancesRouteChildren {
+  AppInstancesIdRoute: typeof AppInstancesIdRoute
+  AppInstancesIndexRoute: typeof AppInstancesIndexRoute
+}
+
+const AppInstancesRouteChildren: AppInstancesRouteChildren = {
+  AppInstancesIdRoute: AppInstancesIdRoute,
+  AppInstancesIndexRoute: AppInstancesIndexRoute,
+}
+
+const AppInstancesRouteWithChildren = AppInstancesRoute._addFileChildren(
+  AppInstancesRouteChildren,
+)
+
 interface AppIntegrationsRouteChildren {
   AppIntegrationsIdRoute: typeof AppIntegrationsIdRoute
 }
@@ -900,6 +1024,20 @@ const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
 
 const AppIntegrationsRouteWithChildren = AppIntegrationsRoute._addFileChildren(
   AppIntegrationsRouteChildren,
+)
+
+interface AppReplayRouteChildren {
+  AppReplayInstanceIdRoute: typeof AppReplayInstanceIdRoute
+  AppReplayIndexRoute: typeof AppReplayIndexRoute
+}
+
+const AppReplayRouteChildren: AppReplayRouteChildren = {
+  AppReplayInstanceIdRoute: AppReplayInstanceIdRoute,
+  AppReplayIndexRoute: AppReplayIndexRoute,
+}
+
+const AppReplayRouteWithChildren = AppReplayRoute._addFileChildren(
+  AppReplayRouteChildren,
 )
 
 interface AppSandboxesRouteChildren {
@@ -923,10 +1061,12 @@ interface AppRouteChildren {
   AppAssistantRoute: typeof AppAssistantRoute
   AppFailuresRoute: typeof AppFailuresRoute
   AppFlowsRoute: typeof AppFlowsRouteWithChildren
+  AppInstancesRoute: typeof AppInstancesRouteWithChildren
   AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
   AppOpsBrainRoute: typeof AppOpsBrainRoute
   AppOverviewRoute: typeof AppOverviewRoute
   AppProvidersRoute: typeof AppProvidersRoute
+  AppReplayRoute: typeof AppReplayRouteWithChildren
   AppSandboxesRoute: typeof AppSandboxesRouteWithChildren
   AppScenariosRoute: typeof AppScenariosRoute
   AppSettingsRoute: typeof AppSettingsRoute
@@ -942,10 +1082,12 @@ const AppRouteChildren: AppRouteChildren = {
   AppAssistantRoute: AppAssistantRoute,
   AppFailuresRoute: AppFailuresRoute,
   AppFlowsRoute: AppFlowsRouteWithChildren,
+  AppInstancesRoute: AppInstancesRouteWithChildren,
   AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
   AppOpsBrainRoute: AppOpsBrainRoute,
   AppOverviewRoute: AppOverviewRoute,
   AppProvidersRoute: AppProvidersRoute,
+  AppReplayRoute: AppReplayRouteWithChildren,
   AppSandboxesRoute: AppSandboxesRouteWithChildren,
   AppScenariosRoute: AppScenariosRoute,
   AppSettingsRoute: AppSettingsRoute,
