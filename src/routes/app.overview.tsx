@@ -263,7 +263,7 @@ function Overview() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <ConnectTile to="/app/ops-brain" icon={Brain} label="Ops Brain" desc="Correlate signals to flows." />
         <ConnectTile to="/app/code" icon={GitBranch} label="Code" desc="GitHub, GitLab, Bitbucket." />
-        <ConnectTile to="/app/slack" icon={MessageSquare} label="Slack" desc="Route alerts, replay in-thread." />
+        <ConnectTile to="/app/integrations" icon={Plug} label="Integrations" desc="Slack, Jira, ClickUp alerts." />
         <ConnectTile to="/app/webhooks" icon={Webhook} label="Webhooks" desc="Delivery log per sandbox." />
       </div>
     </div>
