@@ -14,6 +14,8 @@ import {
   AlertTriangle,
   Boxes,
   PlayCircle,
+  GitBranch,
+  MessageSquare,
 } from "lucide-react";
 
 import {
