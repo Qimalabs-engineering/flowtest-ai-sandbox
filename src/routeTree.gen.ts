@@ -31,6 +31,7 @@ import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
 import { Route as AppInstancesRouteImport } from './routes/app.instances'
 import { Route as AppFlowsRouteImport } from './routes/app.flows'
 import { Route as AppFailuresRouteImport } from './routes/app.failures'
+import { Route as AppCodeRouteImport } from './routes/app.code'
 import { Route as AppAssistantRouteImport } from './routes/app.assistant'
 import { Route as AppApiKeysRouteImport } from './routes/app.api-keys'
 import { Route as AdminTransactionsRouteImport } from './routes/admin.transactions'
@@ -166,6 +167,11 @@ const AppFlowsRoute = AppFlowsRouteImport.update({
 const AppFailuresRoute = AppFailuresRouteImport.update({
   id: '/failures',
   path: '/failures',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCodeRoute = AppCodeRouteImport.update({
+  id: '/code',
+  path: '/code',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAssistantRoute = AppAssistantRouteImport.update({
@@ -320,6 +326,7 @@ export interface FileRoutesByFullPath {
   '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/code': typeof AppCodeRoute
   '/app/failures': typeof AppFailuresRoute
   '/app/flows': typeof AppFlowsRouteWithChildren
   '/app/instances': typeof AppInstancesRouteWithChildren
@@ -368,6 +375,7 @@ export interface FileRoutesByTo {
   '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/code': typeof AppCodeRoute
   '/app/failures': typeof AppFailuresRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
@@ -415,6 +423,7 @@ export interface FileRoutesById {
   '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/code': typeof AppCodeRoute
   '/app/failures': typeof AppFailuresRoute
   '/app/flows': typeof AppFlowsRouteWithChildren
   '/app/instances': typeof AppInstancesRouteWithChildren
@@ -467,6 +476,7 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/code'
     | '/app/failures'
     | '/app/flows'
     | '/app/instances'
@@ -515,6 +525,7 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/code'
     | '/app/failures'
     | '/app/integrations'
     | '/app/ops-brain'
@@ -561,6 +572,7 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/code'
     | '/app/failures'
     | '/app/flows'
     | '/app/instances'
@@ -755,6 +767,13 @@ declare module '@tanstack/react-router' {
       path: '/failures'
       fullPath: '/app/failures'
       preLoaderRoute: typeof AppFailuresRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/code': {
+      id: '/app/code'
+      path: '/code'
+      fullPath: '/app/code'
+      preLoaderRoute: typeof AppCodeRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/assistant': {
@@ -1059,6 +1078,7 @@ const AppSandboxesRouteWithChildren = AppSandboxesRoute._addFileChildren(
 interface AppRouteChildren {
   AppApiKeysRoute: typeof AppApiKeysRoute
   AppAssistantRoute: typeof AppAssistantRoute
+  AppCodeRoute: typeof AppCodeRoute
   AppFailuresRoute: typeof AppFailuresRoute
   AppFlowsRoute: typeof AppFlowsRouteWithChildren
   AppInstancesRoute: typeof AppInstancesRouteWithChildren
@@ -1080,6 +1100,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppApiKeysRoute: AppApiKeysRoute,
   AppAssistantRoute: AppAssistantRoute,
+  AppCodeRoute: AppCodeRoute,
   AppFailuresRoute: AppFailuresRoute,
   AppFlowsRoute: AppFlowsRouteWithChildren,
   AppInstancesRoute: AppInstancesRouteWithChildren,
