@@ -22,6 +22,7 @@ import { Route as AppWebhooksRouteImport } from './routes/app.webhooks'
 import { Route as AppTransactionsRouteImport } from './routes/app.transactions'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppScenariosRouteImport } from './routes/app.scenarios'
+import { Route as AppSandboxesRouteImport } from './routes/app.sandboxes'
 import { Route as AppProvidersRouteImport } from './routes/app.providers'
 import { Route as AppOverviewRouteImport } from './routes/app.overview'
 import { Route as AppOpsBrainRouteImport } from './routes/app.ops-brain'
@@ -41,8 +42,11 @@ import { Route as AdminIntegrationsRouteImport } from './routes/admin.integratio
 import { Route as AdminIncidentsRouteImport } from './routes/admin.incidents'
 import { Route as AdminFeatureFlagsRouteImport } from './routes/admin.feature-flags'
 import { Route as AdminAuditLogsRouteImport } from './routes/admin.audit-logs'
+import { Route as AppSandboxesIndexRouteImport } from './routes/app.sandboxes.index'
 import { Route as AppFlowsIndexRouteImport } from './routes/app.flows.index'
 import { Route as AppTransactionIdRouteImport } from './routes/app.transaction.$id'
+import { Route as AppSandboxesNewRouteImport } from './routes/app.sandboxes.new'
+import { Route as AppSandboxesIdRouteImport } from './routes/app.sandboxes.$id'
 import { Route as AppIntegrationsIdRouteImport } from './routes/app.integrations.$id'
 import { Route as AppIncidentIdRouteImport } from './routes/app.incident.$id'
 import { Route as AppFlowsIdRouteImport } from './routes/app.flows.$id'
@@ -111,6 +115,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
 const AppScenariosRoute = AppScenariosRouteImport.update({
   id: '/scenarios',
   path: '/scenarios',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSandboxesRoute = AppSandboxesRouteImport.update({
+  id: '/sandboxes',
+  path: '/sandboxes',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProvidersRoute = AppProvidersRouteImport.update({
@@ -208,6 +217,11 @@ const AdminAuditLogsRoute = AdminAuditLogsRouteImport.update({
   path: '/audit-logs',
   getParentRoute: () => AdminRoute,
 } as any)
+const AppSandboxesIndexRoute = AppSandboxesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSandboxesRoute,
+} as any)
 const AppFlowsIndexRoute = AppFlowsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -217,6 +231,16 @@ const AppTransactionIdRoute = AppTransactionIdRouteImport.update({
   id: '/transaction/$id',
   path: '/transaction/$id',
   getParentRoute: () => AppRoute,
+} as any)
+const AppSandboxesNewRoute = AppSandboxesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppSandboxesRoute,
+} as any)
+const AppSandboxesIdRoute = AppSandboxesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppSandboxesRoute,
 } as any)
 const AppIntegrationsIdRoute = AppIntegrationsIdRouteImport.update({
   id: '/$id',
@@ -266,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
+  '/app/sandboxes': typeof AppSandboxesRouteWithChildren
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/transactions': typeof AppTransactionsRoute
@@ -276,8 +301,11 @@ export interface FileRoutesByFullPath {
   '/app/flows/$id': typeof AppFlowsIdRoute
   '/app/incident/$id': typeof AppIncidentIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
+  '/app/sandboxes/$id': typeof AppSandboxesIdRoute
+  '/app/sandboxes/new': typeof AppSandboxesNewRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
   '/app/flows/': typeof AppFlowsIndexRoute
+  '/app/sandboxes/': typeof AppSandboxesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -313,8 +341,11 @@ export interface FileRoutesByTo {
   '/app/flows/$id': typeof AppFlowsIdRoute
   '/app/incident/$id': typeof AppIncidentIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
+  '/app/sandboxes/$id': typeof AppSandboxesIdRoute
+  '/app/sandboxes/new': typeof AppSandboxesNewRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
   '/app/flows': typeof AppFlowsIndexRoute
+  '/app/sandboxes': typeof AppSandboxesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -344,6 +375,7 @@ export interface FileRoutesById {
   '/app/ops-brain': typeof AppOpsBrainRoute
   '/app/overview': typeof AppOverviewRoute
   '/app/providers': typeof AppProvidersRoute
+  '/app/sandboxes': typeof AppSandboxesRouteWithChildren
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/transactions': typeof AppTransactionsRoute
@@ -354,8 +386,11 @@ export interface FileRoutesById {
   '/app/flows/$id': typeof AppFlowsIdRoute
   '/app/incident/$id': typeof AppIncidentIdRoute
   '/app/integrations/$id': typeof AppIntegrationsIdRoute
+  '/app/sandboxes/$id': typeof AppSandboxesIdRoute
+  '/app/sandboxes/new': typeof AppSandboxesNewRoute
   '/app/transaction/$id': typeof AppTransactionIdRoute
   '/app/flows/': typeof AppFlowsIndexRoute
+  '/app/sandboxes/': typeof AppSandboxesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -386,6 +421,7 @@ export interface FileRouteTypes {
     | '/app/ops-brain'
     | '/app/overview'
     | '/app/providers'
+    | '/app/sandboxes'
     | '/app/scenarios'
     | '/app/settings'
     | '/app/transactions'
@@ -396,8 +432,11 @@ export interface FileRouteTypes {
     | '/app/flows/$id'
     | '/app/incident/$id'
     | '/app/integrations/$id'
+    | '/app/sandboxes/$id'
+    | '/app/sandboxes/new'
     | '/app/transaction/$id'
     | '/app/flows/'
+    | '/app/sandboxes/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -433,8 +472,11 @@ export interface FileRouteTypes {
     | '/app/flows/$id'
     | '/app/incident/$id'
     | '/app/integrations/$id'
+    | '/app/sandboxes/$id'
+    | '/app/sandboxes/new'
     | '/app/transaction/$id'
     | '/app/flows'
+    | '/app/sandboxes'
   id:
     | '__root__'
     | '/'
@@ -463,6 +505,7 @@ export interface FileRouteTypes {
     | '/app/ops-brain'
     | '/app/overview'
     | '/app/providers'
+    | '/app/sandboxes'
     | '/app/scenarios'
     | '/app/settings'
     | '/app/transactions'
@@ -473,8 +516,11 @@ export interface FileRouteTypes {
     | '/app/flows/$id'
     | '/app/incident/$id'
     | '/app/integrations/$id'
+    | '/app/sandboxes/$id'
+    | '/app/sandboxes/new'
     | '/app/transaction/$id'
     | '/app/flows/'
+    | '/app/sandboxes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -578,6 +624,13 @@ declare module '@tanstack/react-router' {
       path: '/scenarios'
       fullPath: '/app/scenarios'
       preLoaderRoute: typeof AppScenariosRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/sandboxes': {
+      id: '/app/sandboxes'
+      path: '/sandboxes'
+      fullPath: '/app/sandboxes'
+      preLoaderRoute: typeof AppSandboxesRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/providers': {
@@ -713,6 +766,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAuditLogsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/app/sandboxes/': {
+      id: '/app/sandboxes/'
+      path: '/'
+      fullPath: '/app/sandboxes/'
+      preLoaderRoute: typeof AppSandboxesIndexRouteImport
+      parentRoute: typeof AppSandboxesRoute
+    }
     '/app/flows/': {
       id: '/app/flows/'
       path: '/'
@@ -726,6 +786,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/transaction/$id'
       preLoaderRoute: typeof AppTransactionIdRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/app/sandboxes/new': {
+      id: '/app/sandboxes/new'
+      path: '/new'
+      fullPath: '/app/sandboxes/new'
+      preLoaderRoute: typeof AppSandboxesNewRouteImport
+      parentRoute: typeof AppSandboxesRoute
+    }
+    '/app/sandboxes/$id': {
+      id: '/app/sandboxes/$id'
+      path: '/$id'
+      fullPath: '/app/sandboxes/$id'
+      preLoaderRoute: typeof AppSandboxesIdRouteImport
+      parentRoute: typeof AppSandboxesRoute
     }
     '/app/integrations/$id': {
       id: '/app/integrations/$id'
@@ -828,6 +902,22 @@ const AppIntegrationsRouteWithChildren = AppIntegrationsRoute._addFileChildren(
   AppIntegrationsRouteChildren,
 )
 
+interface AppSandboxesRouteChildren {
+  AppSandboxesIdRoute: typeof AppSandboxesIdRoute
+  AppSandboxesNewRoute: typeof AppSandboxesNewRoute
+  AppSandboxesIndexRoute: typeof AppSandboxesIndexRoute
+}
+
+const AppSandboxesRouteChildren: AppSandboxesRouteChildren = {
+  AppSandboxesIdRoute: AppSandboxesIdRoute,
+  AppSandboxesNewRoute: AppSandboxesNewRoute,
+  AppSandboxesIndexRoute: AppSandboxesIndexRoute,
+}
+
+const AppSandboxesRouteWithChildren = AppSandboxesRoute._addFileChildren(
+  AppSandboxesRouteChildren,
+)
+
 interface AppRouteChildren {
   AppApiKeysRoute: typeof AppApiKeysRoute
   AppAssistantRoute: typeof AppAssistantRoute
@@ -837,6 +927,7 @@ interface AppRouteChildren {
   AppOpsBrainRoute: typeof AppOpsBrainRoute
   AppOverviewRoute: typeof AppOverviewRoute
   AppProvidersRoute: typeof AppProvidersRoute
+  AppSandboxesRoute: typeof AppSandboxesRouteWithChildren
   AppScenariosRoute: typeof AppScenariosRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTransactionsRoute: typeof AppTransactionsRoute
@@ -855,6 +946,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppOpsBrainRoute: AppOpsBrainRoute,
   AppOverviewRoute: AppOverviewRoute,
   AppProvidersRoute: AppProvidersRoute,
+  AppSandboxesRoute: AppSandboxesRouteWithChildren,
   AppScenariosRoute: AppScenariosRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTransactionsRoute: AppTransactionsRoute,
@@ -878,13 +970,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
