@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Boxes, Activity, PlayCircle, CheckCircle2, AlertTriangle,
-  Brain, ArrowRight, Webhook, GitBranch, MessageSquare,
+  Brain, ArrowRight, Webhook, GitBranch, Plug,
 } from "lucide-react";
 import {
   Card, CardContent, CardDescription, CardHeader, CardTitle,
