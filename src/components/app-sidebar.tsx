@@ -49,7 +49,6 @@ const observe = [
 
 const connect = [
   { title: "Code", url: "/app/code", icon: GitBranch },
-  { title: "Slack", url: "/app/slack", icon: MessageSquare },
   { title: "Integrations", url: "/app/integrations", icon: Plug },
   { title: "AI Assistant", url: "/app/assistant", icon: Sparkles },
 ];
