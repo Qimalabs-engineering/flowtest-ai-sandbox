@@ -20,6 +20,7 @@ import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AppWebhooksRouteImport } from './routes/app.webhooks'
 import { Route as AppTransactionsRouteImport } from './routes/app.transactions'
+import { Route as AppSlackRouteImport } from './routes/app.slack'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppScenariosRouteImport } from './routes/app.scenarios'
 import { Route as AppSandboxesRouteImport } from './routes/app.sandboxes'
@@ -31,6 +32,7 @@ import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
 import { Route as AppInstancesRouteImport } from './routes/app.instances'
 import { Route as AppFlowsRouteImport } from './routes/app.flows'
 import { Route as AppFailuresRouteImport } from './routes/app.failures'
+import { Route as AppCodeRouteImport } from './routes/app.code'
 import { Route as AppAssistantRouteImport } from './routes/app.assistant'
 import { Route as AppApiKeysRouteImport } from './routes/app.api-keys'
 import { Route as AdminTransactionsRouteImport } from './routes/admin.transactions'
@@ -113,6 +115,11 @@ const AppTransactionsRoute = AppTransactionsRouteImport.update({
   path: '/transactions',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSlackRoute = AppSlackRouteImport.update({
+  id: '/slack',
+  path: '/slack',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -166,6 +173,11 @@ const AppFlowsRoute = AppFlowsRouteImport.update({
 const AppFailuresRoute = AppFailuresRouteImport.update({
   id: '/failures',
   path: '/failures',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCodeRoute = AppCodeRouteImport.update({
+  id: '/code',
+  path: '/code',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAssistantRoute = AppAssistantRouteImport.update({
@@ -320,6 +332,7 @@ export interface FileRoutesByFullPath {
   '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/code': typeof AppCodeRoute
   '/app/failures': typeof AppFailuresRoute
   '/app/flows': typeof AppFlowsRouteWithChildren
   '/app/instances': typeof AppInstancesRouteWithChildren
@@ -331,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/app/sandboxes': typeof AppSandboxesRouteWithChildren
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/slack': typeof AppSlackRoute
   '/app/transactions': typeof AppTransactionsRoute
   '/app/webhooks': typeof AppWebhooksRoute
   '/admin/': typeof AdminIndexRoute
@@ -368,6 +382,7 @@ export interface FileRoutesByTo {
   '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/code': typeof AppCodeRoute
   '/app/failures': typeof AppFailuresRoute
   '/app/integrations': typeof AppIntegrationsRouteWithChildren
   '/app/ops-brain': typeof AppOpsBrainRoute
@@ -375,6 +390,7 @@ export interface FileRoutesByTo {
   '/app/providers': typeof AppProvidersRoute
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/slack': typeof AppSlackRoute
   '/app/transactions': typeof AppTransactionsRoute
   '/app/webhooks': typeof AppWebhooksRoute
   '/admin': typeof AdminIndexRoute
@@ -415,6 +431,7 @@ export interface FileRoutesById {
   '/admin/transactions': typeof AdminTransactionsRoute
   '/app/api-keys': typeof AppApiKeysRoute
   '/app/assistant': typeof AppAssistantRoute
+  '/app/code': typeof AppCodeRoute
   '/app/failures': typeof AppFailuresRoute
   '/app/flows': typeof AppFlowsRouteWithChildren
   '/app/instances': typeof AppInstancesRouteWithChildren
@@ -426,6 +443,7 @@ export interface FileRoutesById {
   '/app/sandboxes': typeof AppSandboxesRouteWithChildren
   '/app/scenarios': typeof AppScenariosRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/slack': typeof AppSlackRoute
   '/app/transactions': typeof AppTransactionsRoute
   '/app/webhooks': typeof AppWebhooksRoute
   '/admin/': typeof AdminIndexRoute
@@ -467,6 +485,7 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/code'
     | '/app/failures'
     | '/app/flows'
     | '/app/instances'
@@ -478,6 +497,7 @@ export interface FileRouteTypes {
     | '/app/sandboxes'
     | '/app/scenarios'
     | '/app/settings'
+    | '/app/slack'
     | '/app/transactions'
     | '/app/webhooks'
     | '/admin/'
@@ -515,6 +535,7 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/code'
     | '/app/failures'
     | '/app/integrations'
     | '/app/ops-brain'
@@ -522,6 +543,7 @@ export interface FileRouteTypes {
     | '/app/providers'
     | '/app/scenarios'
     | '/app/settings'
+    | '/app/slack'
     | '/app/transactions'
     | '/app/webhooks'
     | '/admin'
@@ -561,6 +583,7 @@ export interface FileRouteTypes {
     | '/admin/transactions'
     | '/app/api-keys'
     | '/app/assistant'
+    | '/app/code'
     | '/app/failures'
     | '/app/flows'
     | '/app/instances'
@@ -572,6 +595,7 @@ export interface FileRouteTypes {
     | '/app/sandboxes'
     | '/app/scenarios'
     | '/app/settings'
+    | '/app/slack'
     | '/app/transactions'
     | '/app/webhooks'
     | '/admin/'
@@ -680,6 +704,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTransactionsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/slack': {
+      id: '/app/slack'
+      path: '/slack'
+      fullPath: '/app/slack'
+      preLoaderRoute: typeof AppSlackRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/settings': {
       id: '/app/settings'
       path: '/settings'
@@ -755,6 +786,13 @@ declare module '@tanstack/react-router' {
       path: '/failures'
       fullPath: '/app/failures'
       preLoaderRoute: typeof AppFailuresRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/code': {
+      id: '/app/code'
+      path: '/code'
+      fullPath: '/app/code'
+      preLoaderRoute: typeof AppCodeRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/assistant': {
@@ -1059,6 +1097,7 @@ const AppSandboxesRouteWithChildren = AppSandboxesRoute._addFileChildren(
 interface AppRouteChildren {
   AppApiKeysRoute: typeof AppApiKeysRoute
   AppAssistantRoute: typeof AppAssistantRoute
+  AppCodeRoute: typeof AppCodeRoute
   AppFailuresRoute: typeof AppFailuresRoute
   AppFlowsRoute: typeof AppFlowsRouteWithChildren
   AppInstancesRoute: typeof AppInstancesRouteWithChildren
@@ -1070,6 +1109,7 @@ interface AppRouteChildren {
   AppSandboxesRoute: typeof AppSandboxesRouteWithChildren
   AppScenariosRoute: typeof AppScenariosRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppSlackRoute: typeof AppSlackRoute
   AppTransactionsRoute: typeof AppTransactionsRoute
   AppWebhooksRoute: typeof AppWebhooksRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -1080,6 +1120,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppApiKeysRoute: AppApiKeysRoute,
   AppAssistantRoute: AppAssistantRoute,
+  AppCodeRoute: AppCodeRoute,
   AppFailuresRoute: AppFailuresRoute,
   AppFlowsRoute: AppFlowsRouteWithChildren,
   AppInstancesRoute: AppInstancesRouteWithChildren,
@@ -1091,6 +1132,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSandboxesRoute: AppSandboxesRouteWithChildren,
   AppScenariosRoute: AppScenariosRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppSlackRoute: AppSlackRoute,
   AppTransactionsRoute: AppTransactionsRoute,
   AppWebhooksRoute: AppWebhooksRoute,
   AppIndexRoute: AppIndexRoute,

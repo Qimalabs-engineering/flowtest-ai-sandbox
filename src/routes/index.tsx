@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingHeader, MarketingFooter } from "@/components/marketing-shell";
+import { SlackReplayDemo } from "@/components/slack-replay-demo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -73,7 +74,9 @@ const integrations = [
   { name: "Datadog", body: "Pull APM traces and error logs into incidents." },
   { name: "CloudWatch", body: "Stream AWS logs alongside transaction events." },
   { name: "Sentry", body: "Attach matching exceptions to failed transactions." },
-  { name: "GitHub", body: "Surface risky commits within the incident window." },
+  { name: "GitHub", body: "Open fix PRs against the repo behind the failing flow." },
+  { name: "GitLab", body: "Same workflow, with merge requests on your GitLab projects." },
+  { name: "Bitbucket", body: "Bitbucket repos map to sandboxes for end-to-end correlation." },
   { name: "Slack", body: "Route alerts to the right channel automatically." },
   { name: "Jira", body: "Open tickets with full evidence pre-attached." },
   { name: "ClickUp", body: "Auto-create tasks for triage and remediation." },
@@ -228,6 +231,40 @@ function Landing() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Slack as a product surface */}
+      <section className="relative overflow-hidden border-b bg-[oklch(0.13_0.02_260)] text-white">
+        <div aria-hidden className="absolute left-[15%] top-[10%] -z-10 h-[320px] w-[480px] rounded-full bg-primary/30 blur-[140px]" />
+        <div aria-hidden className="absolute right-[10%] bottom-[10%] -z-10 h-[260px] w-[420px] rounded-full bg-info/25 blur-[140px]" />
+        <div className="mx-auto grid max-w-6xl gap-12 px-4 py-24 md:grid-cols-2 md:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Slack as a product surface</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">
+              Replay a production failure
+              <span className="block bg-gradient-to-br from-primary via-info to-primary bg-clip-text text-transparent">
+                without leaving Slack.
+              </span>
+            </h2>
+            <p className="mt-5 max-w-md text-base text-white/70">
+              When a real failure hits production, FlowSim posts it into the right channel with a one-click replay
+              button. Hit replay, watch the same flow run inside its sandbox, and confirm the fix — all in-thread.
+            </p>
+            <ul className="mt-7 space-y-2.5 text-sm text-white/80">
+              {[
+                "Route alerts per sandbox to the right channel",
+                "Replay in a sandbox without an SSH session",
+                "Fix-validated badge posts back automatically",
+              ].map((t) => (
+                <li key={t} className="flex items-start gap-2">
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" />
+                  <span>{t}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <SlackReplayDemo />
         </div>
       </section>
 
