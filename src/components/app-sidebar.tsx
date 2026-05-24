@@ -12,6 +12,7 @@ import {
   Plug,
   Brain,
   AlertTriangle,
+  Boxes,
 } from "lucide-react";
 
 import {
@@ -27,15 +28,22 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 
-const items = [
+const build = [
   { title: "Overview", url: "/app/overview", icon: LayoutDashboard },
+  { title: "Providers", url: "/app/providers", icon: Server },
+  { title: "Sandboxes", url: "/app/sandboxes", icon: Boxes },
   { title: "Flows", url: "/app/flows", icon: Workflow },
-  { title: "Transactions", url: "/app/transactions", icon: ArrowLeftRight },
+  { title: "Scenarios", url: "/app/scenarios", icon: Workflow },
+];
+
+const observe = [
+  { title: "Instances", url: "/app/transactions", icon: ArrowLeftRight },
   { title: "Failures", url: "/app/failures", icon: AlertTriangle },
   { title: "Webhooks", url: "/app/webhooks", icon: Webhook },
   { title: "Ops Brain", url: "/app/ops-brain", icon: Brain },
-  { title: "Providers", url: "/app/providers", icon: Server },
-  { title: "Scenarios", url: "/app/scenarios", icon: Workflow },
+];
+
+const connect = [
   { title: "Integrations", url: "/app/integrations", icon: Plug },
   { title: "AI Assistant", url: "/app/assistant", icon: Sparkles },
 ];
@@ -45,10 +53,32 @@ const secondary = [
   { title: "Settings", url: "/app/settings", icon: Settings },
 ];
 
+type NavItem = { title: string; url: string; icon: typeof LayoutDashboard };
+
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isActive = (url: string) =>
     pathname === url || pathname.startsWith(url + "/");
+
+  const renderGroup = (label: string, items: NavItem[]) => (
+    <SidebarGroup>
+      <SidebarGroupLabel>{label}</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => (
+            <SidebarMenuItem key={item.url}>
+              <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
+                <Link to={item.url}>
+                  <item.icon className="h-4 w-4" />
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
 
   return (
     <Sidebar collapsible="icon">
@@ -59,45 +89,15 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
             <span className="text-sm font-semibold">FlowSim</span>
-            <span className="text-[10px] text-muted-foreground">Fintech sandbox</span>
+            <span className="text-[10px] text-muted-foreground">Integration command center</span>
           </div>
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
-                    <Link to={item.url}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Account</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {secondary.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
-                    <Link to={item.url}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {renderGroup("Build", build)}
+        {renderGroup("Observe", observe)}
+        {renderGroup("Connect", connect)}
+        {renderGroup("Account", secondary)}
       </SidebarContent>
       <SidebarFooter>
         <div className="rounded-md border bg-card p-3 text-xs group-data-[collapsible=icon]:hidden">

@@ -25,7 +25,7 @@ export const Route = createFileRoute("/app/sandboxes/$id")({
 function SandboxDetail() {
   const { sb } = Route.useLoaderData();
   const flows = getSandboxFlows(sb);
-  const fid = fidelityLabels[sb.fidelity];
+  const fid = fidelityLabels[sb.fidelity as keyof typeof fidelityLabels];
 
   const copy = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
