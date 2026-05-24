@@ -234,28 +234,28 @@ function Landing() {
         </div>
       </section>
 
-      {/* The replay loop — core product visual */}
+      {/* Slack as a product surface */}
       <section className="relative overflow-hidden border-b bg-[oklch(0.13_0.02_260)] text-white">
         <div aria-hidden className="absolute left-[15%] top-[10%] -z-10 h-[320px] w-[480px] rounded-full bg-primary/30 blur-[140px]" />
         <div aria-hidden className="absolute right-[10%] bottom-[10%] -z-10 h-[260px] w-[420px] rounded-full bg-info/25 blur-[140px]" />
-        <div className="mx-auto grid max-w-6xl gap-12 px-4 py-24 md:grid-cols-2 md:items-center">
+        <div className="mx-auto grid max-w-6xl gap-12 px-4 py-24 lg:grid-cols-[1fr_1.15fr] lg:items-center">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">The replay loop</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Where engineers already live</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">
-              Reproduce production failures
+              Replay a production failure
               <span className="block bg-gradient-to-br from-primary via-info to-primary bg-clip-text text-transparent">
-                in a sandbox — in one click.
+                without leaving Slack.
               </span>
             </h2>
             <p className="mt-5 max-w-md text-base text-white/70">
-              Every real failure becomes a replayable instance against its sandbox. Hit replay, watch the same flow
-              run end-to-end, and ship the fix with a green "validated" badge — not a guess.
+              FlowSim drops the alert into the channel that owns the sandbox. One click reproduces the same flow,
+              ticks through every state, and posts back a Fix-Validated badge with the PR attached.
             </p>
             <ul className="mt-7 space-y-2.5 text-sm text-white/80">
               {[
-                "Real production failures mapped to the sandbox that owns them",
-                "One-click replay reproduces the exact flow, state by state",
-                "Fix-validated badge attaches to the PR automatically",
+                "Alerts routed per sandbox to the right channel",
+                "Replay reproduces the exact failed flow, state by state",
+                "Fix-validated reply links straight to the PR",
               ].map((t) => (
                 <li key={t} className="flex items-start gap-2">
                   <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" />
@@ -264,7 +264,7 @@ function Landing() {
               ))}
             </ul>
           </div>
-          <ReplayLoopDemo />
+          <SlackReplayDemo />
         </div>
       </section>
 
