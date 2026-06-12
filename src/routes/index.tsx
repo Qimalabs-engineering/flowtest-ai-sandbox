@@ -19,6 +19,15 @@ import {
   TimerReset,
   ShieldCheck,
   Zap,
+  CreditCard,
+  Send,
+  Wallet,
+  BadgeCheck,
+  Repeat,
+  Landmark,
+  Code2,
+  BookOpen,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingHeader, MarketingFooter } from "@/components/marketing-shell";
