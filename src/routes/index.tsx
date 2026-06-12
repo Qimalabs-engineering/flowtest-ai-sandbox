@@ -447,6 +447,96 @@ function Landing() {
         </div>
       </section>
 
+      {/* Workflow coverage */}
+      <section className="border-b">
+        <div className="mx-auto max-w-6xl px-4 py-24">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Coverage</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Every fintech workflow, not just card payments</h2>
+            <p className="mt-4 text-muted-foreground">Model the full lifecycle of the flows your team actually ships — each with its own realistic success and failure scenarios.</p>
+          </div>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { icon: CreditCard, title: "Payments", body: "Card, transfer, wallet, and USSD — with declines, reversals, and partial captures." },
+              { icon: Send, title: "Payouts", body: "Single and bulk bank transfers, including settlement delays and rejections." },
+              { icon: Wallet, title: "Virtual accounts", body: "Creation, funding, and settlement events with webhook delivery quirks." },
+              { icon: BadgeCheck, title: "KYC & identity", body: "BVN, NIN, passport, and business verification — mismatches, retries, manual review." },
+              { icon: Repeat, title: "Direct debit", body: "Mandates, authorization, and recurring collections with token expiry edge cases." },
+              { icon: Landmark, title: "Open banking", body: "Consent flows and account linking, including revoked consent and timeouts." },
+            ].map((w) => (
+              <div key={w.title} className="group rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 transition-transform group-hover:scale-110">
+                  <w.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 text-base font-semibold tracking-tight">{w.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{w.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI assistant + Knowledge Hub */}
+      <section className="border-b bg-muted/20">
+        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-24 lg:grid-cols-2">
+          {/* AI Integration Assistant */}
+          <div className="flex flex-col rounded-2xl border bg-card p-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-info/10 text-info ring-1 ring-info/20">
+                <Code2 className="h-5 w-5" />
+              </div>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">AI integration assistant</span>
+            </div>
+            <h3 className="mt-5 text-xl font-semibold tracking-tight">Connect your repo. Catch mistakes before prod.</h3>
+            <p className="mt-2 text-sm text-muted-foreground">FlowSim reads your integration code, flags risky patterns, and proposes fixes you can ship as a PR.</p>
+            <div className="mt-6 space-y-3">
+              <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3">
+                <p className="text-xs font-semibold text-destructive">Detected issue</p>
+                <p className="mt-1 text-sm">Webhook signatures from Korapay are not verified.</p>
+              </div>
+              <div className="rounded-xl border border-success/30 bg-success/5 p-3">
+                <p className="text-xs font-semibold text-success">Suggested fix</p>
+                <p className="mt-1 font-mono text-xs text-muted-foreground">verifySignature(req.rawBody, req.headers['x-korapay-signature'])</p>
+              </div>
+            </div>
+            <Button asChild variant="outline" size="sm" className="mt-6 w-fit"><Link to="/app/code">Explore the assistant <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
+          </div>
+
+          {/* Team Knowledge Hub */}
+          <div className="flex flex-col rounded-2xl border bg-card p-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Team knowledge hub</span>
+            </div>
+            <h3 className="mt-5 text-xl font-semibold tracking-tight">Every incident becomes searchable memory.</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Past incidents, fixes, PRs, runbooks, and Slack threads — all linked and searchable. Your team's engineering memory.</p>
+            <div className="mt-6 rounded-xl border bg-background/60 p-3">
+              <div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
+                <Search className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">Choice Bank invalid signature</span>
+              </div>
+              <div className="mt-3 space-y-2">
+                {[
+                  { t: "INC-1183 · signature mismatch on settlement webhook", m: "Fixed in PR #391" },
+                  { t: "Runbook · rotating Choice Bank webhook secrets", m: "3 links" },
+                  { t: "Slack #pay-alerts · thread from Mar 14", m: "12 replies" },
+                ].map((r) => (
+                  <div key={r.t} className="flex items-center gap-3 rounded-lg border bg-card px-3 py-2 text-xs">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    <span className="flex-1 truncate">{r.t}</span>
+                    <span className="shrink-0 text-muted-foreground">{r.m}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
       {/* How it works */}
       <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 py-24">
