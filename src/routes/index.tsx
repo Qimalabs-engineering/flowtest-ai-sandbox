@@ -19,6 +19,15 @@ import {
   TimerReset,
   ShieldCheck,
   Zap,
+  CreditCard,
+  Send,
+  Wallet,
+  BadgeCheck,
+  Repeat,
+  Landmark,
+  Code2,
+  BookOpen,
+  Search,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MarketingHeader, MarketingFooter } from "@/components/marketing-shell";
@@ -123,17 +132,15 @@ function Landing() {
         <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-b from-transparent to-black/40" />
 
         <div className="mx-auto flex max-w-6xl flex-col items-center px-4 pt-24 pb-20 text-center md:pt-32 md:pb-28">
-          <div className="fs-fade-in inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-3.5 py-1.5 text-xs font-medium text-white/90 backdrop-blur">
+          <div className="fs-fade-in inline-flex items-center gap-2.5 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 backdrop-blur">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/70" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
-            <span className="text-white/60">Now with</span>
-            <span className="font-semibold text-white">Ops Brain</span>
-            <span className="text-white/60">— AI incident copilot</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-primary">Now with Ops Brain — AI incident copilot</span>
           </div>
 
-          <h1 className="fs-fade-up mx-auto mt-7 max-w-5xl text-balance text-5xl font-semibold leading-[1.02] tracking-tight md:text-7xl lg:text-[5.25rem]">
+          <h1 className="fs-fade-up mx-auto mt-7 max-w-5xl text-balance text-5xl font-semibold leading-[1.04] tracking-tight md:text-7xl lg:text-[5rem]">
             Test fintech integrations
             <span className="mt-2 block bg-gradient-to-br from-primary via-info to-primary bg-clip-text pb-1 text-transparent">
               before they break in production.
@@ -141,16 +148,12 @@ function Landing() {
           </h1>
 
           <p className="fs-fade-up mx-auto mt-7 max-w-2xl text-pretty text-base text-white/65 md:text-lg" style={{ animationDelay: "80ms" }}>
-            FlowSim is a programmable sandbox for banks, payments, mobile money, and webhooks — plus an AI copilot that investigates failures using your logs, code, and Slack threads.
+            FlowSim is a programmable sandbox for banks, payments, mobile money, and webhooks.{" "}
+            <span className="text-white/90">Replay production incidents, simulate failures, and investigate root cause</span>{" "}
+            — one source of truth for your engineering team.
           </p>
 
-          <div className="fs-fade-up mt-7 flex flex-wrap items-center justify-center gap-x-7 gap-y-2 text-sm text-white/70" style={{ animationDelay: "140ms" }}>
-            <span className="inline-flex items-center gap-1.5"><Brain className="h-4 w-4 text-primary" /> AI-powered investigation</span>
-            <span className="inline-flex items-center gap-1.5"><Webhook className="h-4 w-4 text-info" /> Realistic failure simulation</span>
-            <span className="inline-flex items-center gap-1.5"><Zap className="h-4 w-4 text-warning" /> Setup in 5 minutes</span>
-          </div>
-
-          <div className="fs-fade-up mt-9 flex flex-wrap justify-center gap-3" style={{ animationDelay: "200ms" }}>
+          <div className="fs-fade-up mt-9 flex flex-wrap justify-center gap-3" style={{ animationDelay: "160ms" }}>
             <Button asChild size="lg" className="h-12 px-6 text-sm shadow-2xl shadow-primary/40 hover:-translate-y-0.5 transition-transform">
               <Link to="/signup">Start testing free <ArrowRight className="ml-1.5 h-4 w-4" /></Link>
             </Button>
@@ -159,34 +162,58 @@ function Landing() {
             </Button>
           </div>
 
-          <div className="fs-fade-up mx-auto mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-white/50" style={{ animationDelay: "240ms" }}>
+          <div className="fs-fade-up mx-auto mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-white/50" style={{ animationDelay: "200ms" }}>
             <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-success" /> No real funds, ever</span>
             <span className="inline-flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-white/70" /> No credit card required</span>
             <span className="inline-flex items-center gap-1.5"><GitBranch className="h-3.5 w-3.5 text-info" /> SOC 2 ready</span>
           </div>
 
-          {/* Terminal mockup */}
-          <div className="fs-fade-up relative mx-auto mt-16 w-full max-w-4xl" style={{ animationDelay: "320ms" }}>
-            <div aria-hidden className="absolute -inset-3 rounded-3xl bg-gradient-to-r from-primary/40 via-info/30 to-primary/40 opacity-70 blur-2xl" />
+          {/* Capability grid */}
+          <div className="fs-fade-up mt-14 grid w-full max-w-4xl gap-4 sm:grid-cols-3" style={{ animationDelay: "260ms" }}>
+            {[
+              { icon: Brain, title: "AI-powered investigation", body: "Root-cause analysis across logs, code, and Slack threads." },
+              { icon: Webhook, title: "Realistic failure simulation", body: "Timeouts, reversals, and webhook chaos on payment rails." },
+              { icon: Zap, title: "Setup in 5 minutes", body: "Drop-in SDKs for Node, Go, and Python — zero config." },
+            ].map((c) => (
+              <div
+                key={c.title}
+                className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-left backdrop-blur transition-all hover:-translate-y-0.5 hover:border-primary/30"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/15 text-primary ring-1 ring-primary/20 transition-transform group-hover:scale-110">
+                  <c.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 text-sm font-semibold text-white">{c.title}</h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-white/55">{c.body}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Incident-replay terminal */}
+          <div className="fs-fade-up relative mx-auto mt-12 w-full max-w-4xl" style={{ animationDelay: "320ms" }}>
+            <div aria-hidden className="absolute -inset-3 rounded-3xl bg-gradient-to-r from-primary/40 via-info/30 to-primary/40 opacity-60 blur-2xl" />
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[oklch(0.13_0.02_260)] text-left shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]">
               <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-3">
                 <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.65_0.22_25)]/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.78_0.16_75)]/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-[oklch(0.7_0.17_155)]/70" />
-                <span className="ml-3 font-mono text-[11px] text-white/40">~/flowsim · sandbox.sh</span>
-                <span className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-medium text-white/60">
-                  <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" /> live
+                <span className="mx-auto font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">integration-sandbox · live</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-medium text-white/60">
+                  <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" /> replay
                 </span>
               </div>
-              <pre className="overflow-x-auto p-5 font-mono text-[12.5px] leading-relaxed text-white/80 md:text-sm">
-{`$ `}<span className="text-[oklch(0.75_0.16_75)]">curl</span>{` -X POST https://api.flowsim.dev/v1/transfers \\
-  -H `}<span className="text-[oklch(0.7_0.17_155)]">"Authorization: Bearer fs_sk_sandbox_•••"</span>{` \\
-  -d `}<span className="text-[oklch(0.7_0.17_155)]">{`'{"provider":"mpesa_sim","amount":2500,"scenario":"timeout_30s"}'`}</span>{`
-
-`}<span className="text-[oklch(0.78_0.16_75)]">→ 504 Gateway Timeout</span>{`  · scenario matched: Timeout after 30 seconds
-`}<span className="text-[oklch(0.7_0.17_230)]">→ Ops Brain</span>{` opened `}<span className="text-white">INC-2418</span>{` · evidence: 2 logs, 1 commit, 1 alert
-`}<span className="text-[oklch(0.7_0.17_155)]">✓ root cause</span>{` proposed in `}<span className="text-white">42s</span>{` · confidence 94%`}
-              </pre>
+              <div className="space-y-2 p-5 font-mono text-[12.5px] leading-relaxed text-white/80 md:text-sm">
+                <div className="flex gap-3"><span className="text-info">$</span><span className="text-white/85">flowsim replay --incident INC-2418 --sandbox sb_paystack_main</span></div>
+                <p className="italic text-white/40">Rebuilding production payload in sandbox…</p>
+                <div className="flex gap-3"><span className="text-[oklch(0.7_0.17_155)]">✓</span><span className="text-white/65">Reproduced POST /v1/charges → reason=02 card_declined</span></div>
+                <div className="flex gap-3"><span className="text-[oklch(0.78_0.16_75)]">!</span><span className="text-white/65">Retry policy disabled in commit 8af201d</span></div>
+                <div className="flex gap-3"><span className="text-info">→</span><span className="text-white/65">Ops Brain proposed fix · confidence 94% · opened PR #482</span></div>
+                <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-primary">Incident replay active</p>
+                  <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-white/10">
+                    <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-primary to-info" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -428,6 +455,96 @@ function Landing() {
           </div>
         </div>
       </section>
+
+      {/* Workflow coverage */}
+      <section className="border-b">
+        <div className="mx-auto max-w-6xl px-4 py-24">
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Coverage</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Every fintech workflow, not just card payments</h2>
+            <p className="mt-4 text-muted-foreground">Model the full lifecycle of the flows your team actually ships — each with its own realistic success and failure scenarios.</p>
+          </div>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { icon: CreditCard, title: "Payments", body: "Card, transfer, wallet, and USSD — with declines, reversals, and partial captures." },
+              { icon: Send, title: "Payouts", body: "Single and bulk bank transfers, including settlement delays and rejections." },
+              { icon: Wallet, title: "Virtual accounts", body: "Creation, funding, and settlement events with webhook delivery quirks." },
+              { icon: BadgeCheck, title: "KYC & identity", body: "BVN, NIN, passport, and business verification — mismatches, retries, manual review." },
+              { icon: Repeat, title: "Direct debit", body: "Mandates, authorization, and recurring collections with token expiry edge cases." },
+              { icon: Landmark, title: "Open banking", body: "Consent flows and account linking, including revoked consent and timeouts." },
+            ].map((w) => (
+              <div key={w.title} className="group rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 transition-transform group-hover:scale-110">
+                  <w.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-5 text-base font-semibold tracking-tight">{w.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{w.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI assistant + Knowledge Hub */}
+      <section className="border-b bg-muted/20">
+        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-24 lg:grid-cols-2">
+          {/* AI Integration Assistant */}
+          <div className="flex flex-col rounded-2xl border bg-card p-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-info/10 text-info ring-1 ring-info/20">
+                <Code2 className="h-5 w-5" />
+              </div>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">AI integration assistant</span>
+            </div>
+            <h3 className="mt-5 text-xl font-semibold tracking-tight">Connect your repo. Catch mistakes before prod.</h3>
+            <p className="mt-2 text-sm text-muted-foreground">FlowSim reads your integration code, flags risky patterns, and proposes fixes you can ship as a PR.</p>
+            <div className="mt-6 space-y-3">
+              <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3">
+                <p className="text-xs font-semibold text-destructive">Detected issue</p>
+                <p className="mt-1 text-sm">Webhook signatures from Korapay are not verified.</p>
+              </div>
+              <div className="rounded-xl border border-success/30 bg-success/5 p-3">
+                <p className="text-xs font-semibold text-success">Suggested fix</p>
+                <p className="mt-1 font-mono text-xs text-muted-foreground">verifySignature(req.rawBody, req.headers['x-korapay-signature'])</p>
+              </div>
+            </div>
+            <Button asChild variant="outline" size="sm" className="mt-6 w-fit"><Link to="/app/code">Explore the assistant <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
+          </div>
+
+          {/* Team Knowledge Hub */}
+          <div className="flex flex-col rounded-2xl border bg-card p-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
+                <BookOpen className="h-5 w-5" />
+              </div>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Team knowledge hub</span>
+            </div>
+            <h3 className="mt-5 text-xl font-semibold tracking-tight">Every incident becomes searchable memory.</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Past incidents, fixes, PRs, runbooks, and Slack threads — all linked and searchable. Your team's engineering memory.</p>
+            <div className="mt-6 rounded-xl border bg-background/60 p-3">
+              <div className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2 text-sm">
+                <Search className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">Choice Bank invalid signature</span>
+              </div>
+              <div className="mt-3 space-y-2">
+                {[
+                  { t: "INC-1183 · signature mismatch on settlement webhook", m: "Fixed in PR #391" },
+                  { t: "Runbook · rotating Choice Bank webhook secrets", m: "3 links" },
+                  { t: "Slack #pay-alerts · thread from Mar 14", m: "12 replies" },
+                ].map((r) => (
+                  <div key={r.t} className="flex items-center gap-3 rounded-lg border bg-card px-3 py-2 text-xs">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                    <span className="flex-1 truncate">{r.t}</span>
+                    <span className="shrink-0 text-muted-foreground">{r.m}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
 
       {/* How it works */}
       <section className="border-b">
