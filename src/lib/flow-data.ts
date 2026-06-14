@@ -43,7 +43,7 @@ export interface SuggestedFix {
 export interface FailureScenario {
   id: string;
   name: string;
-  /** Real provider error/result code, e.g. "02", "ResultCode:1032" */
+  /** Provider-surfaced result indicator: gateway_response string, ResultCode, etc. */
   providerCode: string;
   /** Short human cause */
   cause: string;
@@ -122,7 +122,7 @@ const paystackCharge: FlowDefinition = {
   operation: "Charge",
   flowType: "money_movement",
   apiVersion: "2024-01",
-  description: "Card charge with optional 3DS step-up. Mirrors Paystack /charge API behavior including charge.success / charge.failed webhooks with real reason codes.",
+  description: "Card charge with optional OTP/PIN step-up. Mirrors Paystack /charge API behavior. Note: Paystack only emits a charge.success webhook — failed and abandoned outcomes carry NO webhook and must be read from GET /transaction/verify/:reference.",
   states: [
     { id: "initiated", label: "Initiated", kind: "initial", col: 0, row: 0, description: "Charge request received by Paystack." },
     { id: "processing", label: "Processing", kind: "intermediate", col: 1, row: 0, description: "Routed to issuer for authorization." },
@@ -132,36 +132,34 @@ const paystackCharge: FlowDefinition = {
     { id: "abandoned", label: "Abandoned", kind: "terminal_failure", col: 3, row: 3, description: "User abandoned the OTP step." },
   ],
   transitions: [
-    { from: "initiated", to: "processing", event: "charge.start", kind: "normal" },
-    { from: "processing", to: "success", event: "charge.success", kind: "normal" },
-    { from: "processing", to: "awaiting_3ds", event: "charge.3ds_required", kind: "normal" },
-    { from: "awaiting_3ds", to: "success", event: "charge.success", kind: "normal" },
-    { from: "processing", to: "failed", event: "charge.failed", kind: "failure", scenarioId: "card_declined" },
-    { from: "processing", to: "failed", event: "charge.failed", kind: "failure", scenarioId: "insufficient_funds" },
-    { from: "awaiting_3ds", to: "failed", event: "charge.failed", kind: "failure", scenarioId: "otp_invalid" },
-    { from: "awaiting_3ds", to: "abandoned", event: "charge.abandoned", kind: "failure", scenarioId: "user_abandoned" },
+    { from: "initiated", to: "processing", event: "POST /charge", kind: "normal" },
+    { from: "processing", to: "success", event: "status: success", kind: "normal" },
+    { from: "processing", to: "awaiting_3ds", event: "status: send_otp", kind: "normal" },
+    { from: "awaiting_3ds", to: "success", event: "submit_otp → success", kind: "normal" },
+    { from: "processing", to: "failed", event: "status: failed", kind: "failure", scenarioId: "card_declined" },
+    { from: "processing", to: "failed", event: "status: failed", kind: "failure", scenarioId: "insufficient_funds" },
+    { from: "awaiting_3ds", to: "failed", event: "status: failed", kind: "failure", scenarioId: "otp_invalid" },
+    { from: "awaiting_3ds", to: "abandoned", event: "status: abandoned", kind: "failure", scenarioId: "user_abandoned" },
   ],
   happyPath: ["initiated", "processing", "success"],
   failureScenarios: [
     {
       id: "card_declined",
       name: "Card declined by issuer",
-      providerCode: "02",
+      providerCode: "Declined",
       cause: "Issuer declined the authorization (gateway_response: \"Declined\").",
-      symptom: "POST /charge returns 200 with data.status = \"failed\", reason_code 02. charge.failed webhook fires.",
-      webhookEvent: "charge.failed",
+      symptom: "POST /charge returns HTTP 200 with data.status = \"failed\" and gateway_response \"Declined\". No webhook fires — detect via GET /transaction/verify/:reference.",
       suggestedFixes: [
         { title: "Retry on a different rail", detail: "Fall back to bank transfer (NIP) for the same reference.", kind: "fallback", appliesToStates: ["processing"] },
-        { title: "Surface localized message", detail: "Don't show \"02\" to the user. Map to \"Your bank declined this card.\"", kind: "config_change", appliesToStates: ["processing"] },
+        { title: "Surface localized message", detail: "Show the gateway_response in plain language, e.g. \"Your bank declined this card.\"", kind: "config_change", appliesToStates: ["processing"] },
       ],
     },
     {
       id: "insufficient_funds",
       name: "Insufficient funds",
-      providerCode: "51",
-      cause: "Issuer reports insufficient balance on the card.",
-      symptom: "charge.failed webhook with reason_code 51.",
-      webhookEvent: "charge.failed",
+      providerCode: "Insufficient funds",
+      cause: "Issuer reports insufficient balance on the card (gateway_response: \"Insufficient funds\").",
+      symptom: "data.status = \"failed\" with gateway_response \"Insufficient funds\". Detected by polling the Verify API; no webhook is sent.",
       suggestedFixes: [
         { title: "Suggest a smaller amount", detail: "Prompt the user to enter a lower amount or split the payment.", kind: "fallback", appliesToStates: ["processing"] },
       ],
@@ -169,10 +167,9 @@ const paystackCharge: FlowDefinition = {
     {
       id: "otp_invalid",
       name: "Invalid OTP",
-      providerCode: "M1",
-      cause: "User entered the wrong OTP three times during 3DS.",
-      symptom: "charge.failed webhook fires from the awaiting_3ds state.",
-      webhookEvent: "charge.failed",
+      providerCode: "Invalid OTP",
+      cause: "User entered the wrong OTP during the submit_otp step.",
+      symptom: "POST /charge/submit_otp returns data.status = \"failed\" with gateway_response \"Invalid OTP\". No webhook — read result from the submit_otp response or Verify API.",
       suggestedFixes: [
         { title: "Allow OTP resend", detail: "Expose a \"Resend OTP\" action before transitioning to failed.", kind: "retry", appliesToStates: ["awaiting_3ds"] },
         { title: "Escalate to support", detail: "Surface contact channel after 2 invalid OTP attempts.", kind: "escalate", appliesToStates: ["awaiting_3ds"] },
@@ -180,20 +177,17 @@ const paystackCharge: FlowDefinition = {
     },
     {
       id: "user_abandoned",
-      name: "User abandoned 3DS",
-      providerCode: "ABRT",
-      cause: "User closed the 3DS window without entering OTP. Times out after 8 minutes.",
-      symptom: "charge.abandoned webhook fires. No automatic retry.",
-      webhookEvent: "charge.abandoned",
+      name: "User abandoned OTP",
+      providerCode: "abandoned",
+      cause: "User never completed the OTP/PIN step. The transaction status stays \"abandoned\".",
+      symptom: "Transaction remains status = \"abandoned\". Paystack sends NO webhook for this — poll GET /transaction/verify/:reference or treat as abandoned after a timeout.",
       suggestedFixes: [
         { title: "Send recovery email", detail: "Trigger a transactional email with a fresh checkout link within 5 minutes.", kind: "retry", appliesToStates: ["awaiting_3ds"] },
       ],
     },
   ],
   webhooks: [
-    { name: "charge.success", emittedFrom: "success", description: "Fired once when the charge is approved." },
-    { name: "charge.failed", emittedFrom: "failed", description: "Fired with reason_code matching the failure scenario." },
-    { name: "charge.abandoned", emittedFrom: "abandoned", description: "Fired after 8min of inactivity on 3DS." },
+    { name: "charge.success", emittedFrom: "success", description: "The only charge webhook Paystack emits. Fired once when the charge is approved. Failed/abandoned outcomes have no webhook." },
   ],
   p50Ms: 1800,
   p95Ms: 7400,
