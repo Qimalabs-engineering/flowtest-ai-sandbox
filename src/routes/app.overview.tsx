@@ -63,9 +63,9 @@ function Overview() {
       </div>
 
       {/* Loop KPIs */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="fs-stagger grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {loop.map((s) => (
-          <Card key={s.label}>
+          <Card key={s.label} className="fs-card-hover">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <CardDescription className="text-xs">{s.label}</CardDescription>
