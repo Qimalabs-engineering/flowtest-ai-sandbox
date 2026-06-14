@@ -29,7 +29,7 @@ export const Route = createFileRoute("/app/sandboxes/new")({
   validateSearch: (s: Record<string, unknown>) => ({
     provider: typeof s.provider === "string" ? s.provider : undefined,
   }),
-  component: NewSandboxWizard;
+  component: NewSandboxWizard,
 });
 
 const steps = ["Provider", "APIs", "Scenarios", "Review"] as const;
