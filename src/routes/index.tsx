@@ -32,6 +32,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MarketingHeader, MarketingFooter } from "@/components/marketing-shell";
 import { SlackReplayDemo } from "@/components/slack-replay-demo";
+import { Reveal } from "@/components/reveal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
