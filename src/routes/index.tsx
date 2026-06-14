@@ -328,7 +328,7 @@ function Landing() {
       {/* Features — bento */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Everything you need to harden integrations</h2>
             <p className="mt-3 text-muted-foreground">From simulation to investigation — all on one timeline.</p>
           </div>
