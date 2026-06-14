@@ -43,7 +43,7 @@ export interface SuggestedFix {
 export interface FailureScenario {
   id: string;
   name: string;
-  /** Real provider error/result code, e.g. "02", "ResultCode:1032" */
+  /** Provider-surfaced result indicator: gateway_response string, ResultCode, etc. */
   providerCode: string;
   /** Short human cause */
   cause: string;
