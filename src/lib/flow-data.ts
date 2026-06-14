@@ -122,7 +122,7 @@ const paystackCharge: FlowDefinition = {
   operation: "Charge",
   flowType: "money_movement",
   apiVersion: "2024-01",
-  description: "Card charge with optional 3DS step-up. Mirrors Paystack /charge API behavior including charge.success / charge.failed webhooks with real reason codes.",
+  description: "Card charge with optional OTP/PIN step-up. Mirrors Paystack /charge API behavior. Note: Paystack only emits a charge.success webhook — failed and abandoned outcomes carry NO webhook and must be read from GET /transaction/verify/:reference.",
   states: [
     { id: "initiated", label: "Initiated", kind: "initial", col: 0, row: 0, description: "Charge request received by Paystack." },
     { id: "processing", label: "Processing", kind: "intermediate", col: 1, row: 0, description: "Routed to issuer for authorization." },
