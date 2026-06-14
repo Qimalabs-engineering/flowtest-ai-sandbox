@@ -101,7 +101,15 @@ export function AppSidebar() {
         </Link>
       </SidebarHeader>
       <SidebarContent>
+        <div className="px-2 pt-1 group-data-[collapsible=icon]:hidden">
+          <Button asChild className="w-full justify-start gap-2">
+            <Link to="/app/sandboxes/new">
+              <Plus className="h-4 w-4" /> Create sandbox
+            </Link>
+          </Button>
+        </div>
         {renderGroup("Build", build)}
+        {renderGroup("Catalog", catalog)}
         {renderGroup("Observe", observe)}
         {renderGroup("Connect", connect)}
         {renderGroup("Account", secondary)}
