@@ -15,7 +15,10 @@ import {
   Boxes,
   PlayCircle,
   GitBranch,
+  Plus,
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import {
   Sidebar,
