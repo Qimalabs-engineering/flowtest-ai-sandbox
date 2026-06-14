@@ -15,7 +15,10 @@ import {
   Boxes,
   PlayCircle,
   GitBranch,
+  Plus,
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import {
   Sidebar,
@@ -32,10 +35,13 @@ import {
 
 const build = [
   { title: "Overview", url: "/app/overview", icon: LayoutDashboard },
-  { title: "Providers", url: "/app/providers", icon: Server },
   { title: "Sandboxes", url: "/app/sandboxes", icon: Boxes },
-  { title: "Flows", url: "/app/flows", icon: Workflow },
-  { title: "Scenarios", url: "/app/scenarios", icon: Workflow },
+];
+
+const catalog = [
+  { title: "Providers", url: "/app/providers", icon: Server },
+  { title: "APIs", url: "/app/flows", icon: Workflow },
+  { title: "Scenarios", url: "/app/scenarios", icon: AlertTriangle },
 ];
 
 const observe = [
@@ -98,7 +104,15 @@ export function AppSidebar() {
         </Link>
       </SidebarHeader>
       <SidebarContent>
+        <div className="px-2 pt-1 group-data-[collapsible=icon]:hidden">
+          <Button asChild className="w-full justify-start gap-2">
+            <Link to="/app/sandboxes/new">
+              <Plus className="h-4 w-4" /> Create sandbox
+            </Link>
+          </Button>
+        </div>
         {renderGroup("Build", build)}
+        {renderGroup("Catalog", catalog)}
         {renderGroup("Observe", observe)}
         {renderGroup("Connect", connect)}
         {renderGroup("Account", secondary)}
