@@ -32,6 +32,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MarketingHeader, MarketingFooter } from "@/components/marketing-shell";
 import { SlackReplayDemo } from "@/components/slack-replay-demo";
+import { Reveal } from "@/components/reveal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -238,18 +239,18 @@ function Landing() {
       {/* Problem */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">The problem</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Production becomes your real test environment.</h2>
             <p className="mt-4 text-muted-foreground">Then every failure becomes a 2am incident channel.</p>
-          </div>
-          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          </Reveal>
+          <Reveal stagger className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {problems.map((p) => (
               <div
                 key={p.title}
-                className="group relative overflow-hidden rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/5"
+                className="fs-card-hover group relative overflow-hidden rounded-2xl border bg-card p-6"
               >
-                <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tintMap[p.tint]}`}>
+                <div className={`flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-110 ${tintMap[p.tint]}`}>
                   <p.icon className="h-5 w-5" />
                 </div>
                 <h3 className="mt-5 text-base font-semibold tracking-tight">{p.title}</h3>
@@ -257,7 +258,8 @@ function Landing() {
                 <div aria-hidden className="pointer-events-none absolute -bottom-12 -right-12 h-32 w-32 rounded-full bg-primary/0 blur-2xl transition-all group-hover:bg-primary/10" />
               </div>
             ))}
-          </div>
+          </Reveal>
+
         </div>
       </section>
 
@@ -326,10 +328,11 @@ function Landing() {
       {/* Features — bento */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Everything you need to harden integrations</h2>
             <p className="mt-3 text-muted-foreground">From simulation to investigation — all on one timeline.</p>
-          </div>
+          </Reveal>
+
 
           <div className="mt-14 grid gap-4 md:grid-cols-6">
             {/* Big card: Bank & Payment APIs */}
@@ -459,12 +462,12 @@ function Landing() {
       {/* Workflow coverage */}
       <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Coverage</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Every fintech workflow, not just card payments</h2>
             <p className="mt-4 text-muted-foreground">Model the full lifecycle of the flows your team actually ships — each with its own realistic success and failure scenarios.</p>
-          </div>
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          </Reveal>
+          <Reveal stagger className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               { icon: CreditCard, title: "Payments", body: "Card, transfer, wallet, and USSD — with declines, reversals, and partial captures." },
               { icon: Send, title: "Payouts", body: "Single and bulk bank transfers, including settlement delays and rejections." },
@@ -473,7 +476,7 @@ function Landing() {
               { icon: Repeat, title: "Direct debit", body: "Mandates, authorization, and recurring collections with token expiry edge cases." },
               { icon: Landmark, title: "Open banking", body: "Consent flows and account linking, including revoked consent and timeouts." },
             ].map((w) => (
-              <div key={w.title} className="group rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
+              <div key={w.title} className="fs-card-hover group rounded-2xl border bg-card p-6">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 transition-transform group-hover:scale-110">
                   <w.icon className="h-5 w-5" />
                 </div>
@@ -481,7 +484,8 @@ function Landing() {
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{w.body}</p>
               </div>
             ))}
-          </div>
+          </Reveal>
+
         </div>
       </section>
 
@@ -549,44 +553,45 @@ function Landing() {
       {/* How it works */}
       <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Workflow</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">How it works</h2>
             <p className="mt-4 text-muted-foreground">Five steps from your first simulated transaction to closed ticket.</p>
-          </div>
+          </Reveal>
 
           <div className="relative mt-14">
             <div aria-hidden className="absolute left-0 right-0 top-5 hidden h-px bg-gradient-to-r from-transparent via-border to-transparent lg:block" />
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+            <Reveal stagger className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
               {steps.map((s) => (
-                <div key={s.n} className="relative rounded-2xl border bg-card p-5 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-info text-primary-foreground font-mono text-sm font-semibold shadow-lg shadow-primary/30 ring-4 ring-background">
+                <div key={s.n} className="fs-card-hover group relative rounded-2xl border bg-card p-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-info text-primary-foreground font-mono text-sm font-semibold shadow-lg shadow-primary/30 ring-4 ring-background transition-transform group-hover:scale-110">
                     {s.n}
                   </div>
                   <h3 className="mt-4 text-sm font-semibold tracking-tight">{s.title}</h3>
                   <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{s.body}</p>
                 </div>
               ))}
-            </div>
+            </Reveal>
           </div>
+
         </div>
       </section>
 
       {/* Integrations */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Integrations</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Plugs into the tools you already use</h2>
             <p className="mt-4 text-muted-foreground">Bring your observability, code, and ops stack into every incident.</p>
             <div className="mt-6 flex justify-center">
-              <Button asChild variant="outline" size="sm"><Link to="/app/integrations">Browse all <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
+              <Button asChild variant="outline" size="sm" className="fs-press"><Link to="/app/integrations">Browse all <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
             </div>
-          </div>
-          <div className="mt-10 grid gap-3 md:grid-cols-3 lg:grid-cols-4">
+          </Reveal>
+          <Reveal stagger className="mt-10 grid gap-3 md:grid-cols-3 lg:grid-cols-4">
             {integrations.map((i) => (
-              <div key={i.name} className="group flex items-start gap-3 rounded-2xl border bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-muted to-background ring-1 ring-border text-foreground">
+              <div key={i.name} className="fs-card-hover group flex items-start gap-3 rounded-2xl border bg-card p-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-muted to-background ring-1 ring-border text-foreground transition-transform group-hover:scale-110">
                   <PlugZap className="h-4 w-4 text-primary" />
                 </div>
                 <div className="min-w-0">
@@ -595,46 +600,48 @@ function Landing() {
                 </div>
               </div>
             ))}
-          </div>
+          </Reveal>
+
         </div>
       </section>
 
       {/* Use cases */}
       <section className="border-b">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Use cases</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">What teams ship with FlowSim</h2>
             <p className="mt-4 text-muted-foreground">From first integration to post-incident review.</p>
-          </div>
-          <div className="mt-10 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          </Reveal>
+          <Reveal stagger className="mt-10 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {useCases.map((u) => (
-              <div key={u.title} className="flex items-center gap-3 rounded-2xl border bg-card p-4 transition-colors hover:bg-muted/40">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
+              <div key={u.title} className="group flex items-center gap-3 rounded-2xl border bg-card p-4 transition-colors hover:bg-muted/40">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 transition-transform group-hover:scale-110">
                   <u.icon className="h-4 w-4" />
                 </div>
                 <p className="text-sm font-medium">{u.title}</p>
               </div>
             ))}
-          </div>
+          </Reveal>
+
         </div>
       </section>
 
       {/* Pricing preview */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Simple, predictable pricing</h2>
             <p className="mt-3 text-muted-foreground">Start free. Scale when your traffic does.</p>
-          </div>
-          <div className="mt-12 grid gap-5 md:grid-cols-3 md:items-stretch">
+          </Reveal>
+          <Reveal stagger className="mt-12 grid gap-5 md:grid-cols-3 md:items-stretch">
             {plans.map((p) => (
               <div
                 key={p.name}
                 className={
                   p.featured
-                    ? "relative rounded-2xl border-2 border-primary bg-card p-8 shadow-2xl shadow-primary/15 md:-translate-y-2"
-                    : "relative rounded-2xl border bg-card p-8"
+                    ? "fs-card-hover relative rounded-2xl border-2 border-primary bg-card p-8 shadow-2xl shadow-primary/15 md:-translate-y-2"
+                    : "fs-card-hover relative rounded-2xl border bg-card p-8"
                 }
               >
                 {p.featured && (
@@ -647,7 +654,7 @@ function Landing() {
                   <span className="text-4xl font-semibold tracking-tight">{p.price}</span>
                   <span className="text-sm text-muted-foreground">{p.note}</span>
                 </div>
-                <Button asChild className="mt-6 w-full" variant={p.featured ? "default" : "outline"} size="lg">
+                <Button asChild className="mt-6 w-full fs-press" variant={p.featured ? "default" : "outline"} size="lg">
                   <Link to="/signup">{p.cta}</Link>
                 </Button>
                 <ul className="mt-6 space-y-3 text-sm">
@@ -662,7 +669,8 @@ function Landing() {
                 </ul>
               </div>
             ))}
-          </div>
+          </Reveal>
+
           <div className="mt-8 text-center">
             <Button asChild variant="link"><Link to="/pricing">See full pricing <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
           </div>
