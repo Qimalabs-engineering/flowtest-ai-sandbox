@@ -32,10 +32,13 @@ import {
 
 const build = [
   { title: "Overview", url: "/app/overview", icon: LayoutDashboard },
-  { title: "Providers", url: "/app/providers", icon: Server },
   { title: "Sandboxes", url: "/app/sandboxes", icon: Boxes },
-  { title: "Flows", url: "/app/flows", icon: Workflow },
-  { title: "Scenarios", url: "/app/scenarios", icon: Workflow },
+];
+
+const catalog = [
+  { title: "Providers", url: "/app/providers", icon: Server },
+  { title: "APIs", url: "/app/flows", icon: Workflow },
+  { title: "Scenarios", url: "/app/scenarios", icon: AlertTriangle },
 ];
 
 const observe = [
