@@ -239,18 +239,18 @@ function Landing() {
       {/* Problem */}
       <section className="border-b bg-muted/20">
         <div className="mx-auto max-w-6xl px-4 py-24">
-          <div className="mx-auto max-w-2xl text-center">
+          <Reveal className="mx-auto max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">The problem</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-5xl">Production becomes your real test environment.</h2>
             <p className="mt-4 text-muted-foreground">Then every failure becomes a 2am incident channel.</p>
-          </div>
-          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          </Reveal>
+          <Reveal stagger className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {problems.map((p) => (
               <div
                 key={p.title}
-                className="group relative overflow-hidden rounded-2xl border bg-card p-6 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/5"
+                className="fs-card-hover group relative overflow-hidden rounded-2xl border bg-card p-6"
               >
-                <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${tintMap[p.tint]}`}>
+                <div className={`flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-110 ${tintMap[p.tint]}`}>
                   <p.icon className="h-5 w-5" />
                 </div>
                 <h3 className="mt-5 text-base font-semibold tracking-tight">{p.title}</h3>
@@ -258,7 +258,8 @@ function Landing() {
                 <div aria-hidden className="pointer-events-none absolute -bottom-12 -right-12 h-32 w-32 rounded-full bg-primary/0 blur-2xl transition-all group-hover:bg-primary/10" />
               </div>
             ))}
-          </div>
+          </Reveal>
+
         </div>
       </section>
 
