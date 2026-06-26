@@ -155,7 +155,7 @@ function Landing() {
           </p>
 
           <div className="fs-fade-up mt-9 flex flex-wrap justify-center gap-3" style={{ animationDelay: "160ms" }}>
-            <Button asChild size="lg" className="h-12 px-6 text-sm shadow-2xl shadow-primary/40 hover:-translate-y-0.5 transition-transform">
+            <Button asChild size="lg" variant="premium" className="h-12 px-6 text-sm hover:-translate-y-0.5 transition-transform">
               <Link to="/signup">Start testing free <ArrowRight className="ml-1.5 h-4 w-4" /></Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="h-12 border-white/20 bg-white/[0.04] px-6 text-sm text-white hover:bg-white/10 hover:text-white backdrop-blur">
