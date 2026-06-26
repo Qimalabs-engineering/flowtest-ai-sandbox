@@ -333,3 +333,66 @@
     transition-duration: 1ms !important;
   }
 }
+
+/* ---------- Premium surface utilities ---------- */
+@utility fs-gradient-text {
+  background-image: var(--gradient-brand);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@utility fs-glass {
+  background-color: color-mix(in oklab, var(--card) 62%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid color-mix(in oklab, var(--foreground) 9%, transparent);
+}
+
+@utility fs-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility fs-elevate {
+  box-shadow: var(--shadow-elegant);
+}
+
+@utility fs-gradient-primary {
+  background-image: var(--gradient-primary);
+}
+
+/* Hero ring/spotlight highlight on top edge of a card */
+@utility fs-hairline {
+  position: relative;
+}
+@utility fs-aurora {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+@keyframes fs-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -14px, 0); }
+}
+@keyframes fs-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(3%, 4%, 0) scale(1.08); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+.fs-float { animation: fs-float 7s ease-in-out infinite; }
+.fs-drift { animation: fs-drift 18s ease-in-out infinite; }
+
+@keyframes fs-sheen {
+  0% { transform: translateX(-120%); }
+  60%, 100% { transform: translateX(220%); }
+}
+.fs-sheen { position: relative; overflow: hidden; }
+.fs-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, color-mix(in oklab, var(--foreground) 14%, transparent) 50%, transparent 70%);
+  transform: translateX(-120%);
+}
+.fs-sheen:hover::after { animation: fs-sheen 1.1s ease-out; }
